@@ -43,13 +43,13 @@ namespace APICore.Controllers
                 return BadRequest();
             }
             _userRepository.Add(user);
-            return CreatedAtRoute("GetProduct", new {id = user.ID}, user);
+            return CreatedAtRoute("GetProduct", new {id = user.Id}, user);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(long id, [FromBody] User user)
         {
-            if (user == null || user.ID != id)
+            if (user == null || user.Id != id)
             {
                 return BadRequest();
             }
@@ -61,10 +61,8 @@ namespace APICore.Controllers
                 return NotFound();
             }
 
-            _user.FirstName = user.FirstName;
-            _user.LastName = user.LastName;
-            _user.Birthday = user.Birthday;
-            _user.Address = user.Address;
+            _user.UserName = user.UserName;
+            _user.Password = user.Password;            
 
             _userRepository.Update(_user);
             return new NoContentResult();

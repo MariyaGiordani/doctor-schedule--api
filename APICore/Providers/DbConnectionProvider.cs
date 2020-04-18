@@ -1,12 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using APICore.Model;
+using APICore.Providers.ContextSettings;
 
 namespace APICore.Database
 {
@@ -17,5 +11,14 @@ namespace APICore.Database
         { }
 
         public DbSet<User> User { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelbuilder) {
+            base.OnModelCreating(modelbuilder);
+
+            //Apply User Configuration
+            modelbuilder.ApplyConfiguration(new UserEntitySettings());
+            //modelbuilder.ApplyConfiguration(new DoctorEntitySettings());
+            //modelbuilder.ApplyConfiguration(new PatientEntitySettings());
+        }
     }
 }

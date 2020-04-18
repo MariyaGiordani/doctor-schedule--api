@@ -27,7 +27,7 @@ namespace APICore.Repositories
 
         public User Find(long id)
         {
-            return _context.User.FirstOrDefault(p => p.ID == id);
+            return _context.User.FirstOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<User> GetAll()
@@ -37,7 +37,7 @@ namespace APICore.Repositories
 
         public void Remove(long id)
         {
-            var entity = _context.User.First(p => p.ID == id);
+            var entity = _context.User.First(p => p.Id == id);
             _context.User.Remove(entity);
             _context.SaveChanges();
         }
