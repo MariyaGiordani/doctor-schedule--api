@@ -1,0 +1,6 @@
+C:\Matheus\doctor-schedule-api\APICore\obj\Debug\netcoreapp3.0\APICore.csprojAssemblyReference.cache
+C:\Matheus\doctor-schedule-api\APICore\obj\Debug\netcoreapp3.0\APICore.csproj.CoreCompileInputs.cache
+C:\Matheus\doctor-schedule-api\APICore\obj\Debug\netcoreapp3.0\APICore.MvcApplicationPartsAssemblyInfo.cs
+C:\Matheus\doctor-schedule-api\APICore\obj\Debug\netcoreapp3.0\APICore.MvcApplicationPartsAssemblyInfo.cache
+C:\Matheus\doctor-schedule-api\APICore\obj\Debug\netcoreapp3.0\APICore.AssemblyInfoInputs.cache
+C:\Matheus\doctor-schedule-api\APICore\obj\Debug\netcoreapp3.0\APICore.AssemblyInfo.cs

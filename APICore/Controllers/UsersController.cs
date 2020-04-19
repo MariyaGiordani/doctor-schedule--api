@@ -1,20 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using APICore.Repositories;
-using APICore.Model;
+using APICore.Models;
 
 namespace APICore.Controllers
 {
     [Route("api/[Controller]")]
     public class UsersController : Controller
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;        
+
         public UsersController(IUserRepository userRepository)
         {
-            _userRepository = userRepository;
+            _userRepository = userRepository;            
         }
 
         [HttpGet]
@@ -35,14 +33,15 @@ namespace APICore.Controllers
         }
 
         [HttpPost]
-
         public IActionResult Create([FromBody] User user)
         {
             if (user == null)
             {
                 return BadRequest();
             }
-            _userRepository.Add(user);
+
+            _userRepository.Add(user);            
+
             return CreatedAtRoute("GetProduct", new {id = user.Id}, user);
         }
 

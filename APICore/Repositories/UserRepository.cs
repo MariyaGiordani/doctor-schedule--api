@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using APICore.Database;
-using APICore.Model;
+using APICore.Models;
 
 namespace APICore.Repositories
 {
@@ -16,13 +16,8 @@ namespace APICore.Repositories
         }
         public void Add(User user)
         {
-            _context.User.Add(user);
+            _context.User.Add(user);            
             _context.SaveChanges();
-        }
-
-        public void AddUser(User user)
-        {
-            throw new NotImplementedException();
         }
 
         public User Find(long id)
