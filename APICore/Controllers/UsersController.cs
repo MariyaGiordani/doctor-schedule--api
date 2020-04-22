@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using APICore.Repositories;
 using APICore.Models;
+using System;
 
 namespace APICore.Controllers
 {
@@ -21,34 +22,48 @@ namespace APICore.Controllers
             return _userRepository.GetAll();
         }
 
-        [HttpGet("id", Name = "GetProduct")]
-        public IActionResult GetById(long id)
-        {
-            var user = _userRepository.Find(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return new ObjectResult(user);
-        }
-
         [HttpPost]
         public IActionResult Create([FromBody] User user)
-        {
-            if (user == null)
-            {
+        {            
+            if ((user == null) || (user.Doctor == null && user.Patient == null)){
                 return BadRequest();
             }
 
-            _userRepository.Add(user);            
+            string message = "";
 
-            return CreatedAtRoute("GetProduct", new {id = user.Id}, user);
+            if (!user.UserIsValid(ref message)) {
+                RetornoWS retorno = new RetornoWS {                    
+                    Mensagem = $"Não foi possível cadastrar o usuário. Necessário informar os campos: {message}.",
+                    Sucesso = false
+                };
+
+                return BadRequest(retorno);
+            }
+
+            try {
+                _userRepository.Add(user);
+
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = "Usuário cadastrado com sucesso.",
+                    Sucesso = true
+                };
+
+                return StatusCode(201, retorno);
+            }
+            catch (Exception e) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = $"Erro ao cadastrar usuário. Motivo: {e.InnerException}.",
+                    Sucesso = false
+                };
+
+                return BadRequest(retorno);                
+            }                        
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(long id, [FromBody] User user)
         {
-            if (user == null || user.Id != id)
+            if (user == null || user.Id == id)
             {
                 return BadRequest();
             }
@@ -67,17 +82,23 @@ namespace APICore.Controllers
             return new NoContentResult();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
-        {
-            var user = _userRepository.Find(id);
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] User user) {            
+            if (_userRepository.Login(user.UserName, user.Password)) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = "Login efetuado com sucesso.",
+                    Sucesso = true
+                };
 
-            if (user == null)
-            {
-                return NotFound();
+                return Ok(retorno);
+            } else {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = "Usuário ou senha inválidos",
+                    Sucesso = false
+                };
+
+                return Unauthorized(retorno);
             }
-            _userRepository.Remove(id);
-            return new NoContentResult();
         }
     }
 }

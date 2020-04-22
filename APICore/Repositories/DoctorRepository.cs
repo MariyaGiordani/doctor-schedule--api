@@ -1,5 +1,7 @@
 ﻿using APICore.Database;
 using APICore.Models;
+using Remotion.Linq.Clauses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,6 +36,23 @@ namespace APICore.Repositories
         public void Update(Doctor doctor) {
             _context.Doctor.Update(doctor);
             _context.SaveChanges();
+        }
+
+        public IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName) {
+            var result = _context.Doctor.AsQueryable();
+
+            if (speciality != null) {
+                result = result.Where(d => d.Speciality == speciality);
+            }
+
+            if (firstName != null) {
+                result = result.Where(d => d.FirstName.Contains(firstName));
+            }
+
+            if (lastName != null) {
+                result = result.Where(d => d.LastName.Contains(lastName));
+            }
+            return result.ToList();
         }
     }
 }

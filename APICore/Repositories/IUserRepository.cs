@@ -13,5 +13,6 @@ namespace APICore.Repositories
         User Find(long id);
         void Remove(long id);
         void Update(User product);
+        bool Login(string userName, string password);
     }
 }

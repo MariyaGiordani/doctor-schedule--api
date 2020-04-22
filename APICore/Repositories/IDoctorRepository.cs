@@ -10,5 +10,6 @@ namespace APICore.Repositories
         Doctor Find(long cpf);
         void Remove(long cpf);
         void Update(Doctor doctor);
-    }
+        IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName);
+        }
 }

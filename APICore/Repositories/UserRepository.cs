@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using APICore.Database;
 using APICore.Models;
+using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
 
 namespace APICore.Repositories
 {
@@ -41,6 +42,14 @@ namespace APICore.Repositories
         {
             _context.User.Update(user);
             _context.SaveChanges();
+        }
+
+        public bool Login(string userName, string password) {
+            var result = _context.User
+                        .Where(u => u.UserName == userName)
+                        .Where(u => u.Password == password).Any();
+
+            return result;
         }
     }
 }
