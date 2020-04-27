@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using APICore.Models;
 
 namespace APICore.Repositories
 {
-    interface IPatientRepository
+    public interface IPatientRepository
     {
         void Add(Patient patient);
         IEnumerable<Patient> GetAll();

@@ -68,26 +68,59 @@ namespace APICore.Controllers
                 return BadRequest();
             }
 
+            string message = "";
+
+            if (!user.UserIsValid(ref message)) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = $"Não foi possível atualizar o usuário. Necessário informar os campos: {message}.",
+                    Sucesso = false
+                };
+
+                return BadRequest(retorno);
+            }
+
             var _user = _userRepository.Find(id);
 
             if (_user == null)
             {
-                return NotFound();
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = "Usuário não encontrado, verifique os dados informados.",
+                    Sucesso = false
+                };
+                return NotFound(retorno);
             }
 
-            _user.UserName = user.UserName;
-            _user.Password = user.Password;            
+            try {
+                _user.UserName = user.UserName;
+                _user.Password = user.Password;
 
-            _userRepository.Update(_user);
-            return new NoContentResult();
+                _userRepository.Update(_user);
+
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = "Usuário atualizado com sucesso.",
+                    Sucesso = true
+                };
+                return Ok(retorno);
+            }
+            catch (Exception e) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = $"Erro ao atualizar usuário.Motivo: {e.InnerException}",
+                    Sucesso = false
+                };
+
+                return StatusCode(500, retorno);
+            }            
         }
 
         [HttpPost("Login")]
         public IActionResult Login([FromBody] User user) {            
-            if (_userRepository.Login(user.UserName, user.Password)) {
+            var User = _userRepository.Login(user.UserName, user.Password);
+
+            if (User != null) {
                 RetornoWS retorno = new RetornoWS {
                     Mensagem = "Login efetuado com sucesso.",
-                    Sucesso = true
+                    Sucesso = true,
+                    Objeto = User
                 };
 
                 return Ok(retorno);

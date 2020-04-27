@@ -1,11 +1,26 @@
-﻿namespace APICore.Models
+﻿using System.Globalization;
+
+namespace APICore.Models
 {
     public class Patient
     {
+        string firstName;
+        string lastName;
+        string email;
+
         public long Cpf { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
+        public string FirstName {
+            get => firstName;
+            set => firstName = value.ToUpper(); 
+        }
+        public string LastName {
+            get => lastName;
+            set => lastName = value.ToUpper(); 
+        }
+        public string Email {
+            get => email; 
+            set => email = value.ToUpper(); 
+        }
         public int Id { get; set; }
         public User User { get; set; }
 
@@ -30,7 +45,9 @@
                 isValid = false;
             }
 
-            message = message.Remove(message.LastIndexOf(","));
+            if (message.LastIndexOf(",") != -1) { 
+                message = message.Remove(message.LastIndexOf(","));
+            }
 
             return isValid;
         }

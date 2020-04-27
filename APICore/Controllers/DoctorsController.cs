@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APICore.Repositories;
-using System.Collections.Generic;
 using APICore.Models;
+using System;
 
 namespace APICore.Controllers
 {
@@ -27,6 +27,58 @@ namespace APICore.Controllers
             }            
 
             return Ok(_doctorRepository.GetDoctor(speciality, firstName, lastName));
+        }
+
+        [HttpPut("{cpf}")]
+        public IActionResult Update(long cpf, [FromBody] Doctor doctor) {
+            if (doctor == null || doctor.Cpf != cpf) {
+                return BadRequest();
+            }
+
+            string message = "";
+
+            if (!doctor.DoctorIsValid(ref message)) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = $"Não foi possível atualizar o cadastro do médico. Necessário informar os campos: {message}.",
+                    Sucesso = false
+                };
+
+                return BadRequest(retorno);
+            }
+
+            var _doctor = _doctorRepository.Find(cpf);
+
+            if (_doctor == null) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = "Médico não encontrado, verifique os dados informados.",
+                    Sucesso = false
+                };
+                return NotFound(retorno);
+            }
+
+            try {
+                _doctor.FirstName = doctor.FirstName;
+                _doctor.LastName = doctor.LastName;
+                _doctor.Email = doctor.Email;
+                _doctor.Crm = doctor.Crm;
+                _doctor.Speciality = doctor.Speciality;
+
+                _doctorRepository.Update(_doctor);
+
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = "Médico atualizado com sucesso.",
+                    Sucesso = true
+                };
+                return Ok(retorno);
+            }
+            catch (Exception e) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = $"Erro ao atualizar médico.Motivo: {e.InnerException}",
+                    Sucesso = false
+                };
+
+                return StatusCode(500, retorno);
+            }
         }
     }
 }

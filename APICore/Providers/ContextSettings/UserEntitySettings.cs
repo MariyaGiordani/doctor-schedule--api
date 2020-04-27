@@ -23,7 +23,7 @@ namespace APICore.Providers.ContextSettings
             modelbuilder.Property(u => u.UserName)
                  .HasColumnName("USER_NAME")
                  .HasMaxLength(100)
-                 .IsRequired();
+                 .IsRequired();            
 
             modelbuilder.HasOne(m => m.Doctor).WithOne(u => u.User).HasForeignKey<Doctor>(u => u.Id).IsRequired();
             modelbuilder.HasOne(p => p.Patient).WithOne(u => u.User).HasForeignKey<Patient>(u => u.Id).IsRequired();

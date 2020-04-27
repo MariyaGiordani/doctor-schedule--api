@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using APICore.Database;
 using APICore.Models;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
+using Microsoft.EntityFrameworkCore;
 
 namespace APICore.Repositories
 {
@@ -44,12 +42,12 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public bool Login(string userName, string password) {
-            var result = _context.User
-                        .Where(u => u.UserName == userName)
-                        .Where(u => u.Password == password).Any();
-
-            return result;
+        public User Login(string userName, string password) {            
+            return _context.User
+                  .Where(p => p.UserName == userName && p.Password == password)
+                  .Include(p => p.Doctor)
+                  .Include(p => p.Patient)
+                  .FirstOrDefault();
         }
     }
 }
