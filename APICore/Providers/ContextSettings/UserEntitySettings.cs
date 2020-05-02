@@ -27,6 +27,7 @@ namespace APICore.Providers.ContextSettings
 
             modelbuilder.HasOne(m => m.Doctor).WithOne(u => u.User).HasForeignKey<Doctor>(u => u.Id).IsRequired();
             modelbuilder.HasOne(p => p.Patient).WithOne(u => u.User).HasForeignKey<Patient>(u => u.Id).IsRequired();
+            modelbuilder.HasOne(s => s.Security).WithOne(u => u.User).HasForeignKey<Security>(u => u.Id).IsRequired();
         }
     }
 }

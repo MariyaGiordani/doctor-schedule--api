@@ -15,6 +15,7 @@ namespace APICore.Repositories
         }
         public void Add(User user)
         {
+            user.Password = user.HashStringPassword(user.Password);
             _context.User.Add(user);            
             _context.SaveChanges();
         }
@@ -42,12 +43,22 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public User Login(string userName, string password) {            
+        public User Login(string userName, string password) {
             return _context.User
                   .Where(p => p.UserName == userName && p.Password == password)
                   .Include(p => p.Doctor)
                   .Include(p => p.Patient)
                   .FirstOrDefault();
+        }
+
+        public User FindByUser(User user) {
+            IQueryable<User> result = _context.User.AsQueryable();
+            return result.Where(u => u.UserName == user.UserName).FirstOrDefault();
+        }
+
+        public long FindByUserLong(User user) {
+            IQueryable<User> result = _context.User.AsQueryable();
+            return result.Where(u => u.UserName == user.UserName).Select(u => u.Id).FirstOrDefault();
         }
     }
 }

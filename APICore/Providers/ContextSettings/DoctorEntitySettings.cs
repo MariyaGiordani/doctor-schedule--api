@@ -13,8 +13,8 @@ namespace APICore.Providers.ContextSettings
 
             modelbuilder.Property(m => m.Cpf)
                 .HasColumnName("CPF")
-                .HasColumnType("NUMERIC(11,0)")
                 .ValueGeneratedNever()
+                .HasMaxLength(11)
                 .IsRequired();
 
             modelbuilder.Property(m => m.FirstName)
@@ -24,11 +24,6 @@ namespace APICore.Providers.ContextSettings
 
             modelbuilder.Property(m => m.LastName)
                  .HasColumnName("LAST_NAME")
-                 .HasMaxLength(70)
-                 .IsRequired();
-
-            modelbuilder.Property(m => m.Email)
-                 .HasColumnName("EMAIL")
                  .HasMaxLength(70)
                  .IsRequired();
 

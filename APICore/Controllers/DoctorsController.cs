@@ -2,9 +2,11 @@
 using APICore.Repositories;
 using APICore.Models;
 using System;
+using Microsoft.AspNetCore.Cors;
 
 namespace APICore.Controllers
 {
+    [EnableCors("AllowMyOrigin")]
     [Route("api/[controller]")]
     [ApiController]
     public class DoctorsController : ControllerBase
@@ -30,7 +32,7 @@ namespace APICore.Controllers
         }
 
         [HttpPut("{cpf}")]
-        public IActionResult Update(long cpf, [FromBody] Doctor doctor) {
+        public IActionResult Update(string cpf, [FromBody] Doctor doctor) {
             if (doctor == null || doctor.Cpf != cpf) {
                 return BadRequest();
             }
@@ -59,7 +61,6 @@ namespace APICore.Controllers
             try {
                 _doctor.FirstName = doctor.FirstName;
                 _doctor.LastName = doctor.LastName;
-                _doctor.Email = doctor.Email;
                 _doctor.Crm = doctor.Crm;
                 _doctor.Speciality = doctor.Speciality;
 
@@ -74,6 +75,40 @@ namespace APICore.Controllers
             catch (Exception e) {
                 RetornoWS retorno = new RetornoWS {
                     Mensagem = $"Erro ao atualizar médico.Motivo: {e.InnerException}",
+                    Sucesso = false
+                };
+
+                return StatusCode(500, retorno);
+            }
+        }
+
+        [HttpGet("exists")]
+        public IActionResult DoctorExists(string cpf) {
+            if (cpf == "") {
+                return BadRequest();
+            }
+
+            try {
+                var _doctor = _doctorRepository.Find(cpf);
+
+                if (_doctor == null) {
+                    RetornoWS retorno = new RetornoWS {
+                        Mensagem = "CPF não cadastrado, pode prosseguir com o cadastro do médico.",
+                        Sucesso = true
+                    };
+                    return NotFound(retorno);
+                }
+                else {
+                    RetornoWS retorno = new RetornoWS {
+                        Mensagem = "CPF já cadastrado, não é possível prosseguir com o cadastro.",
+                        Sucesso = false
+                    };
+                    return Ok(retorno);
+                }
+            }
+            catch (Exception e) {
+                RetornoWS retorno = new RetornoWS {
+                    Mensagem = $"Erro ao buscar médico.Motivo: {e.InnerException}",
                     Sucesso = false
                 };
 

@@ -18,7 +18,7 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public Patient Find(long cpf) {
+        public Patient Find(string cpf) {
             return _context.Patient.FirstOrDefault(p => p.Cpf == cpf);
         }
 
@@ -26,7 +26,7 @@ namespace APICore.Repositories
             return _context.Patient.ToList();
         }
 
-        public void Remove(long cpf) {
+        public void Remove(string cpf) {
             var entity = _context.Patient.First(p => p.Cpf == cpf);
             _context.Patient.Remove(entity);
             _context.SaveChanges();

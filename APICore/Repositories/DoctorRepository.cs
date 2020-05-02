@@ -17,7 +17,7 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public Doctor Find(long cpf) {
+        public Doctor Find(string cpf) {
             return _context.Doctor.FirstOrDefault(d => d.Cpf == cpf);
         }
 
@@ -25,7 +25,7 @@ namespace APICore.Repositories
             return _context.Doctor.ToList();
         }
 
-        public void Remove(long cpf) {
+        public void Remove(string cpf) {
             var entity = _context.Doctor.First(d => d.Cpf == cpf);
             _context.Doctor.Remove(entity);
             _context.SaveChanges();

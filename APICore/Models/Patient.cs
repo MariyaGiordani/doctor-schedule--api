@@ -6,9 +6,8 @@ namespace APICore.Models
     {
         string firstName;
         string lastName;
-        string email;
 
-        public long Cpf { get; set; }
+        public string Cpf { get; set; }
         public string FirstName {
             get => firstName;
             set => firstName = value.ToUpper(); 
@@ -17,15 +16,12 @@ namespace APICore.Models
             get => lastName;
             set => lastName = value.ToUpper(); 
         }
-        public string Email {
-            get => email; 
-            set => email = value.ToUpper(); 
-        }
+
         public int Id { get; set; }
         public User User { get; set; }
 
         public bool PatientIsValid(ref string message, bool isValid = true) {
-            if (Cpf == 0) {
+            if (Cpf == "") {
                 message += "CPF,";
                 isValid = false;
             }
@@ -37,11 +33,6 @@ namespace APICore.Models
 
             if (LastName == "") {
                 message += "Last Name,";
-                isValid = false;
-            }
-
-            if (Email == "") {
-                message += "E-mail";
                 isValid = false;
             }
 

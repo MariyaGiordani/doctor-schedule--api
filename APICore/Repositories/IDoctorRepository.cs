@@ -7,8 +7,8 @@ namespace APICore.Repositories
     {
         void Add(Doctor doctor);
         IEnumerable<Doctor> GetAll();
-        Doctor Find(long cpf);
-        void Remove(long cpf);
+        Doctor Find(string cpf);
+        void Remove(string cpf);
         void Update(Doctor doctor);
         IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName);
         }

@@ -3,17 +3,26 @@ using System.Collections.Generic;
 using APICore.Repositories;
 using APICore.Models;
 using System;
+using Microsoft.AspNetCore.Cors;
 
 namespace APICore.Controllers
 {
+    [EnableCors("AllowMyOrigin")]
     [Route("api/[Controller]")]
     public class UsersController : Controller
     {
-        private readonly IUserRepository _userRepository;        
+        private readonly IUserRepository _userRepository;
+        private readonly ISecurityRepository _securityRepository;
+        private readonly IDoctorRepository _doctorRepository;
+        private readonly IPatientRepository _patientRepository;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, ISecurityRepository securityRepository,
+            IDoctorRepository doctorRepository, IPatientRepository patientRepository)
         {
-            _userRepository = userRepository;            
+            _userRepository = userRepository;
+            _securityRepository = securityRepository;
+            _doctorRepository = doctorRepository;
+            _patientRepository = patientRepository;
         }
 
         [HttpGet]
@@ -40,15 +49,35 @@ namespace APICore.Controllers
                 return BadRequest(retorno);
             }
 
-            try {
-                _userRepository.Add(user);
+            try {                
+                User _user = _userRepository.FindByUser(user);
+                bool cpfExists = false;
 
-                RetornoWS retorno = new RetornoWS {
-                    Mensagem = "Usuário cadastrado com sucesso.",
-                    Sucesso = true
-                };
+                if (user.Doctor != null) {
+                    cpfExists = _doctorRepository.Find(user.Doctor.Cpf) == null;
+                }
+                else {
+                    cpfExists = _patientRepository.Find(user.Patient.Cpf) == null;
+                }
 
-                return StatusCode(201, retorno);
+                if ((_user == null) && (cpfExists == true)){
+                    _userRepository.Add(user);
+
+                    RetornoWS retorno = new RetornoWS {
+                        Mensagem = "Usuário cadastrado com sucesso.",
+                        Sucesso = true
+                    };
+
+                    return StatusCode(201, retorno);
+                }
+                else {
+                    RetornoWS retorno = new RetornoWS {
+                        Mensagem = "Usuário ou CPF já existente.Não será possível cadastrar.",
+                        Sucesso = false
+                    };
+
+                    return Ok(retorno);
+                }
             }
             catch (Exception e) {
                 RetornoWS retorno = new RetornoWS {
@@ -79,7 +108,7 @@ namespace APICore.Controllers
                 return BadRequest(retorno);
             }
 
-            var _user = _userRepository.Find(id);
+            User _user = _userRepository.Find(id);
 
             if (_user == null)
             {
@@ -113,24 +142,41 @@ namespace APICore.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login([FromBody] User user) {            
-            var User = _userRepository.Login(user.UserName, user.Password);
+        public IActionResult Login([FromBody] User user) {
 
-            if (User != null) {
-                RetornoWS retorno = new RetornoWS {
-                    Mensagem = "Login efetuado com sucesso.",
-                    Sucesso = true,
-                    Objeto = User
-                };
+            long idUser = _userRepository.FindByUserLong(user);
 
-                return Ok(retorno);
-            } else {
+            if (idUser == 0) {
                 RetornoWS retorno = new RetornoWS {
-                    Mensagem = "Usuário ou senha inválidos",
+                    Mensagem = "Usuário inválido.",
                     Sucesso = false
                 };
 
                 return Unauthorized(retorno);
+            }
+            else {
+                byte[] salt = _securityRepository.Find(idUser);
+                string pass = user.HashString(user.Password, salt);
+
+                User User = _userRepository.Login(user.UserName, pass);
+
+                if (User != null) {
+                    RetornoWS retorno = new RetornoWS {
+                        Mensagem = "Login efetuado com sucesso.",
+                        Sucesso = true,
+                        Objeto = User
+                    };
+
+                    return Ok(retorno);
+                }
+                else {
+                    RetornoWS retorno = new RetornoWS {
+                        Mensagem = "Senha inválida.",
+                        Sucesso = false
+                    };
+
+                    return Unauthorized(retorno);
+                }
             }
         }
     }
