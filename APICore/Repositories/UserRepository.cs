@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using APICore.Database;
-using APICore.Model;
+using APICore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace APICore.Repositories
 {
@@ -16,18 +15,14 @@ namespace APICore.Repositories
         }
         public void Add(User user)
         {
-            _context.User.Add(user);
+            user.Password = user.HashStringPassword(user.Password);
+            _context.User.Add(user);            
             _context.SaveChanges();
-        }
-
-        public void AddUser(User user)
-        {
-            throw new NotImplementedException();
         }
 
         public User Find(long id)
         {
-            return _context.User.FirstOrDefault(p => p.ID == id);
+            return _context.User.FirstOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<User> GetAll()
@@ -37,7 +32,7 @@ namespace APICore.Repositories
 
         public void Remove(long id)
         {
-            var entity = _context.User.First(p => p.ID == id);
+            var entity = _context.User.First(p => p.Id == id);
             _context.User.Remove(entity);
             _context.SaveChanges();
         }
@@ -46,6 +41,24 @@ namespace APICore.Repositories
         {
             _context.User.Update(user);
             _context.SaveChanges();
+        }
+
+        public User Login(string userName, string password) {
+            return _context.User
+                  .Where(p => p.UserName == userName && p.Password == password)
+                  .Include(p => p.Doctor)
+                  .Include(p => p.Patient)
+                  .FirstOrDefault();
+        }
+
+        public User FindByUser(User user) {
+            IQueryable<User> result = _context.User.AsQueryable();
+            return result.Where(u => u.UserName == user.UserName).FirstOrDefault();
+        }
+
+        public long FindByUserLong(User user) {
+            IQueryable<User> result = _context.User.AsQueryable();
+            return result.Where(u => u.UserName == user.UserName).Select(u => u.Id).FirstOrDefault();
         }
     }
 }

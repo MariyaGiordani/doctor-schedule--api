@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using APICore.Model;
+﻿using System.Collections.Generic;
+using APICore.Models;
 
 namespace APICore.Repositories
 {
@@ -12,6 +9,9 @@ namespace APICore.Repositories
         IEnumerable<User> GetAll();
         User Find(long id);
         void Remove(long id);
-        void Update(User product);
+        void Update(User user);
+        User Login(string userName, string password);
+        User FindByUser(User user);
+        long FindByUserLong(User user);
     }
 }
