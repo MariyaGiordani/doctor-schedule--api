@@ -9,8 +9,6 @@ namespace APICore.Models
 {
     public class User
     {
-        string password;
-
         public int Id {get; set;}
         public string UserName {get; set;}
         public string Password { get; set; }        
@@ -72,18 +70,6 @@ namespace APICore.Models
             ));
                 
             return value;
-        }
-
-        public string ReturnHash(string value, byte[] salt) {
-            string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: value,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA512,
-                iterationCount: 10000,
-                numBytesRequested: 512 / 8
-            ));
-
-            return hash;
         }
     }
 }
