@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nCAnH+xhvPHGB/hRjhZyBbK0w5ncQ2cAkkKYBm/oVrwKkFoKjtx0lmKiNLQRo9g2WxDLlXZ8IRt5T8QkYC4XeA==",
+  "dgSpecHash": "uAEiLul3Mrgd/JKd2tPiuiIn0HgYClKqRhajrpslFgEfLgzDCQw8mERLsNQV7WUiX1YcS5BZo/ALSl9jJz8+7Q==",
   "success": true,
-  "projectFilePath": "C:\\Matheus\\doctor-schedule-api\\APICore\\APICore.csproj",
+  "projectFilePath": "C:\\Matheus\\doctor-schedule--api\\APICore\\APICore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\matheus.pinheiro\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.6\\microsoft.aspnet.webapi.client.5.2.6.nupkg.sha512",
     "C:\\Users\\matheus.pinheiro\\.nuget\\packages\\microsoft.aspnetcore\\2.2.0\\microsoft.aspnetcore.2.2.0.nupkg.sha512",

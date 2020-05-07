@@ -13230,11 +13230,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Matheus\\doctor-schedule-api\\APICore\\APICore.csproj",
+      "projectUniqueName": "C:\\Matheus\\doctor-schedule--api\\APICore\\APICore.csproj",
       "projectName": "APICore",
-      "projectPath": "C:\\Matheus\\doctor-schedule-api\\APICore\\APICore.csproj",
+      "projectPath": "C:\\Matheus\\doctor-schedule--api\\APICore\\APICore.csproj",
       "packagesPath": "C:\\Users\\matheus.pinheiro\\.nuget\\packages\\",
-      "outputPath": "C:\\Matheus\\doctor-schedule-api\\APICore\\obj\\",
+      "outputPath": "C:\\Matheus\\doctor-schedule--api\\APICore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\matheus.pinheiro\\AppData\\Roaming\\NuGet\\NuGet.Config",
