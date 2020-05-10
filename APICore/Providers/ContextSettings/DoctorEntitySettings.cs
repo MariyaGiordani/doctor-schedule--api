@@ -40,6 +40,8 @@ namespace APICore.Providers.ContextSettings
             modelbuilder.Property(m => m.Id)
                  .HasColumnName("USER_ID")
                  .IsRequired();
+            
+            modelbuilder.HasMany(d => d.Addresses).WithOne(d => d.Doctor).IsRequired();
         }
     }
 }

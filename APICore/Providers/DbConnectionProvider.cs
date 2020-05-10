@@ -14,6 +14,7 @@ namespace APICore.Database
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Patient> Patient { get; set; }
         public DbSet<Security> Security { get; set; }
+        public DbSet<Address> Address { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder) {
             base.OnModelCreating(modelbuilder);
@@ -23,6 +24,7 @@ namespace APICore.Database
             modelbuilder.ApplyConfiguration(new DoctorEntitySettings());
             modelbuilder.ApplyConfiguration(new PatientEntitySettings());
             modelbuilder.ApplyConfiguration(new SecurityEntitySettings());
+            modelbuilder.ApplyConfiguration(new AddressEntitySettings());
         }
     }
 }

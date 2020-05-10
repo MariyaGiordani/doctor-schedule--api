@@ -3,6 +3,8 @@ using APICore.Repositories;
 using APICore.Models;
 using System;
 using Microsoft.AspNetCore.Cors;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace APICore.Controllers
 {
@@ -12,9 +14,11 @@ namespace APICore.Controllers
     public class DoctorsController : ControllerBase
     {
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IAddressRepository _addressRepository;
 
-        public DoctorsController(IDoctorRepository doctorRepository) {
+        public DoctorsController(IDoctorRepository doctorRepository, IAddressRepository addressRepository) {
             _doctorRepository = doctorRepository;
+            _addressRepository = addressRepository;
         }
 
         [HttpGet("search")]
@@ -114,6 +118,6 @@ namespace APICore.Controllers
 
                 return StatusCode(500, retorno);
             }
-        }
+        }               
     }
 }

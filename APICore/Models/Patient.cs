@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace APICore.Models
 {
@@ -6,8 +7,13 @@ namespace APICore.Models
     {
         string firstName;
         string lastName;
+        string cpf;
 
-        public string Cpf { get; set; }
+        public string Cpf
+        {
+            get => cpf;
+            set => cpf = value.Replace(".", "").Replace("-", "");
+        }
         public string FirstName {
             get => firstName;
             set => firstName = value.ToUpper(); 
@@ -18,6 +24,7 @@ namespace APICore.Models
         }
 
         public int Id { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public User User { get; set; }
 
         public bool PatientIsValid(ref string message, bool isValid = true) {

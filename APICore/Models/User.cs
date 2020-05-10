@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.CodeAnalysis.Differencing;
-using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 using System;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
@@ -9,8 +7,12 @@ namespace APICore.Models
 {
     public class User
     {
+        string userName;
         public int Id {get; set;}
-        public string UserName {get; set;}
+        public string UserName {
+            get => userName;
+            set => userName = value.ToUpper();
+        }
         public string Password { get; set; }        
         public Doctor Doctor { get; set; }
         public Patient Patient { get; set; }

@@ -49,6 +49,7 @@ namespace APICore
             services.AddTransient<IDoctorRepository, DoctorRepository>();
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<ISecurityRepository, SecurityRepository>();
+            services.AddTransient<IAddressRepository, AddressRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

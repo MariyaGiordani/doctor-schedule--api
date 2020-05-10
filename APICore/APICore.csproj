@@ -13,6 +13,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200509184848_Initialize-Create.cs" />
+    <Compile Remove="Migrations\20200509184848_Initialize-Create.Designer.cs" />
+    <Compile Remove="Migrations\20200509185949_CorrectingAddressTable.cs" />
+    <Compile Remove="Migrations\20200509185949_CorrectingAddressTable.Designer.cs" />
+    <Compile Remove="Migrations\20200509190123_InitializeCreate.cs" />
+    <Compile Remove="Migrations\20200509190123_InitializeCreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
