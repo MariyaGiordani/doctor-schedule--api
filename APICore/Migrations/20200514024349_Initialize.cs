@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APICore.Migrations
 {
-    public partial class InitializeCreate : Migration
+    public partial class Initialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -97,7 +97,9 @@ namespace APICore.Migrations
                     CITY = table.Column<string>(nullable: false),
                     UF = table.Column<string>(nullable: false),
                     INFORMATION = table.Column<string>(maxLength: 4000, nullable: true),
-                    Cpf = table.Column<string>(nullable: false)
+                    Cpf = table.Column<string>(nullable: false),
+                    TELEPHONE = table.Column<string>(nullable: false),
+                    HEALTHCARE = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,15 +112,84 @@ namespace APICore.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "M_TIMESHEET",
+                columns: table => new
+                {
+                    TIMESHEET_ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    START_DATE = table.Column<DateTime>(nullable: false),
+                    END_DATE = table.Column<DateTime>(nullable: false),
+                    LUNCH_START_DATE = table.Column<DateTime>(nullable: false),
+                    LUNCH_END_DATE = table.Column<DateTime>(nullable: false),
+                    APPOINTMENT_DURATION = table.Column<DateTime>(nullable: false),
+                    CPF = table.Column<string>(maxLength: 11, nullable: false),
+                    ADDRESS_ID = table.Column<int>(nullable: false),
+                    APPOINTMENT_CANCEL_TIME = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_M_TIMESHEET", x => x.TIMESHEET_ID);
+                    table.ForeignKey(
+                        name: "FK_M_TIMESHEET_M_ADDRESS_ADDRESS_ID",
+                        column: x => x.ADDRESS_ID,
+                        principalTable: "M_ADDRESS",
+                        principalColumn: "ADDRESS_ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_M_TIMESHEET_M_DOCTOR_CPF",
+                        column: x => x.CPF,
+                        principalTable: "M_DOCTOR",
+                        principalColumn: "CPF",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "M_DAYS_OF_THE_WEEK",
+                columns: table => new
+                {
+                    DAYS_ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    NAME = table.Column<int>(nullable: false),
+                    TIME_SHEET_ID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_M_DAYS_OF_THE_WEEK", x => x.DAYS_ID);
+                    table.ForeignKey(
+                        name: "FK_M_DAYS_OF_THE_WEEK_M_TIMESHEET_TIME_SHEET_ID",
+                        column: x => x.TIME_SHEET_ID,
+                        principalTable: "M_TIMESHEET",
+                        principalColumn: "TIMESHEET_ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_M_ADDRESS_Cpf",
                 table: "M_ADDRESS",
                 column: "Cpf");
 
             migrationBuilder.CreateIndex(
+                name: "IX_M_DAYS_OF_THE_WEEK_TIME_SHEET_ID",
+                table: "M_DAYS_OF_THE_WEEK",
+                column: "TIME_SHEET_ID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_M_DOCTOR_USER_ID",
                 table: "M_DOCTOR",
                 column: "USER_ID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_M_TIMESHEET_ADDRESS_ID",
+                table: "M_TIMESHEET",
+                column: "ADDRESS_ID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_M_TIMESHEET_CPF",
+                table: "M_TIMESHEET",
+                column: "CPF",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -131,13 +202,19 @@ namespace APICore.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "M_ADDRESS");
+                name: "M_DAYS_OF_THE_WEEK");
 
             migrationBuilder.DropTable(
                 name: "P_PATIENT");
 
             migrationBuilder.DropTable(
                 name: "U_SECURITY");
+
+            migrationBuilder.DropTable(
+                name: "M_TIMESHEET");
+
+            migrationBuilder.DropTable(
+                name: "M_ADDRESS");
 
             migrationBuilder.DropTable(
                 name: "M_DOCTOR");

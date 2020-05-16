@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20200509185949_CorrectingAddressTable.Designer.cs" />
     <Compile Remove="Migrations\20200509190123_InitializeCreate.cs" />
     <Compile Remove="Migrations\20200509190123_InitializeCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200510222001_CreateTimeSheetTable.cs" />
+    <Compile Remove="Migrations\20200510222001_CreateTimeSheetTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

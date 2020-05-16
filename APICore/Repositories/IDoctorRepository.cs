@@ -11,5 +11,6 @@ namespace APICore.Repositories
         void Remove(string cpf);
         void Update(Doctor doctor);
         IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName);
-        }
+        bool DoctorExists(string cpf);
+    }
 }

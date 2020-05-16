@@ -21,7 +21,7 @@ namespace APICore.Repositories
             return _context.Address
                 .Where(d => d.Cpf == cpf)
                 .Where(a => a.AddressId == addressId)
-                .Single();
+                .SingleOrDefault();
         }
 
         public IEnumerable<Address> GetAll() {
@@ -51,6 +51,12 @@ namespace APICore.Repositories
             return _context.Address
                    .Where(a => a.AddressId == address.AddressId)
                    .Where(a => a.Cpf == address.Cpf).FirstOrDefault() != null;
+        }
+
+        public virtual bool AddressExists(int addressId)
+        {
+            return _context.Address
+                   .Where(a => a.AddressId == addressId).FirstOrDefault() != null;
         }
     }
 }

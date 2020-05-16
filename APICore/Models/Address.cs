@@ -26,8 +26,11 @@ namespace APICore.Models
         public Doctor Doctor { get; set; }
         public string Cpf { get; set; }
         [NotMapped]
-        public AddressAction AddressAction { get; set; }
-
+        public AddressAction AddressAction { get; set; }       
+        public TimeSheet TimeSheet { get; set; }
+        public string Telephone { get; set; }
+        public string HealthCare { get; set; }
+        
         public bool AddressIsValid(ref string message, bool isValid = true)
         {
             if (RoadType == "")

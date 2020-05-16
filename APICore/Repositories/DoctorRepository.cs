@@ -52,6 +52,11 @@ namespace APICore.Repositories
             }
             return result.ToList();
         }
+
+        public bool DoctorExists(string cpf)
+        {
+            return _context.Doctor.FirstOrDefault(d => d.Cpf == cpf) != null;
+        }
     }
 }
         

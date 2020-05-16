@@ -32,6 +32,8 @@ namespace APICore.Models
         public User User { get; set; }
         [JsonIgnore]
         public ICollection<Address> Addresses { get; set; }
+        [JsonIgnore]
+        public TimeSheet TimeSheet { get; set; }
 
         public bool DoctorIsValid(ref string message, bool isValid = true) {            
             if (Cpf == "") {

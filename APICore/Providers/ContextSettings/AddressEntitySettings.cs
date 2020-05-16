@@ -54,7 +54,17 @@ namespace APICore.Providers.ContextSettings
 
             modelbuilder.Property(m => m.Information)
                  .HasColumnName("INFORMATION")
-                 .HasMaxLength(4000);        
+                 .HasMaxLength(4000);
+
+            modelbuilder.Property(m => m.Telephone)
+                 .HasColumnName("TELEPHONE")
+                 .IsRequired();
+
+            modelbuilder.Property(m => m.HealthCare)
+                 .HasColumnName("HEALTHCARE")
+                 .IsRequired();
+
+            modelbuilder.HasOne(a => a.TimeSheet).WithOne(a => a.Address).HasForeignKey<TimeSheet>(a => a.AddressId).IsRequired();
         }
     }
 }

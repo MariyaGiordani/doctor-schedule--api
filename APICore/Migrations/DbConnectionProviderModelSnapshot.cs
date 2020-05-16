@@ -37,6 +37,10 @@ namespace APICore.Migrations
                     b.Property<string>("Cpf")
                         .IsRequired();
 
+                    b.Property<string>("HealthCare")
+                        .IsRequired()
+                        .HasColumnName("HEALTHCARE");
+
                     b.Property<string>("Information")
                         .HasColumnName("INFORMATION")
                         .HasMaxLength(4000);
@@ -64,6 +68,10 @@ namespace APICore.Migrations
                         .HasColumnName("STREET")
                         .HasMaxLength(100);
 
+                    b.Property<string>("Telephone")
+                        .IsRequired()
+                        .HasColumnName("TELEPHONE");
+
                     b.Property<string>("UF")
                         .IsRequired()
                         .HasColumnName("UF");
@@ -73,6 +81,26 @@ namespace APICore.Migrations
                     b.HasIndex("Cpf");
 
                     b.ToTable("M_ADDRESS");
+                });
+
+            modelBuilder.Entity("APICore.Models.DaysOfTheWeek", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("DAYS_ID")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Name")
+                        .HasColumnName("NAME");
+
+                    b.Property<int>("TimeSheetId")
+                        .HasColumnName("TIME_SHEET_ID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TimeSheetId");
+
+                    b.ToTable("M_DAYS_OF_THE_WEEK");
                 });
 
             modelBuilder.Entity("APICore.Models.Doctor", b =>
@@ -152,6 +180,50 @@ namespace APICore.Migrations
                     b.ToTable("U_SECURITY");
                 });
 
+            modelBuilder.Entity("APICore.Models.TimeSheet", b =>
+                {
+                    b.Property<int>("TimeSheetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("TIMESHEET_ID")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AddressId")
+                        .HasColumnName("ADDRESS_ID");
+
+                    b.Property<DateTime>("AppointmentCancelTime")
+                        .HasColumnName("APPOINTMENT_CANCEL_TIME");
+
+                    b.Property<DateTime>("AppointmentDuration")
+                        .HasColumnName("APPOINTMENT_DURATION");
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasColumnName("CPF")
+                        .HasMaxLength(11);
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnName("END_DATE");
+
+                    b.Property<DateTime>("LunchEndDate")
+                        .HasColumnName("LUNCH_END_DATE");
+
+                    b.Property<DateTime>("LunchStartDate")
+                        .HasColumnName("LUNCH_START_DATE");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnName("START_DATE");
+
+                    b.HasKey("TimeSheetId");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique();
+
+                    b.HasIndex("Cpf")
+                        .IsUnique();
+
+                    b.ToTable("M_TIMESHEET");
+                });
+
             modelBuilder.Entity("APICore.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -182,6 +254,14 @@ namespace APICore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("APICore.Models.DaysOfTheWeek", b =>
+                {
+                    b.HasOne("APICore.Models.TimeSheet", "TimeSheet")
+                        .WithMany("DaysOfTheWeeks")
+                        .HasForeignKey("TimeSheetId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("APICore.Models.Doctor", b =>
                 {
                     b.HasOne("APICore.Models.User", "User")
@@ -204,6 +284,19 @@ namespace APICore.Migrations
                         .WithOne("Security")
                         .HasForeignKey("APICore.Models.Security", "Id")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("APICore.Models.TimeSheet", b =>
+                {
+                    b.HasOne("APICore.Models.Address", "Address")
+                        .WithOne("TimeSheet")
+                        .HasForeignKey("APICore.Models.TimeSheet", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("APICore.Models.Doctor", "Doctor")
+                        .WithOne("TimeSheet")
+                        .HasForeignKey("APICore.Models.TimeSheet", "Cpf")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

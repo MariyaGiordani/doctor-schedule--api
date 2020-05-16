@@ -12,5 +12,6 @@ namespace APICore.Repositories
         void Update(Address address);
         IEnumerable<Address> GetAddress(string cpf);
         bool AddressExists(Address address);
+        bool AddressExists(int addressId);
     }
 }

@@ -50,6 +50,8 @@ namespace APICore
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<ISecurityRepository, SecurityRepository>();
             services.AddTransient<IAddressRepository, AddressRepository>();
+            services.AddTransient<ITimeSheetRepository, TimeSheetRepository>();
+            services.AddTransient<IDaysOfTheWeekRepository, DaysOfTheWeekRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,7 +78,6 @@ namespace APICore
                 });
 
             app.UseMvc();
-            //app.UseCors("AllowMyOrigin");
             app.UseHttpsRedirection();
         }
     }
