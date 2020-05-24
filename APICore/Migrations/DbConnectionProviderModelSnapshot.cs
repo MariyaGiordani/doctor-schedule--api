@@ -83,6 +83,44 @@ namespace APICore.Migrations
                     b.ToTable("M_ADDRESS");
                 });
 
+            modelBuilder.Entity("APICore.Models.Appointment", b =>
+                {
+                    b.Property<int>("AppointmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("APPOINTMENT_ID")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AddressId")
+                        .HasColumnName("ADDRESS_ID");
+
+                    b.Property<DateTime>("AppointmentTime")
+                        .HasColumnName("APPOINTMENT_TIME");
+
+                    b.Property<string>("DoctorCpf")
+                        .IsRequired()
+                        .HasColumnName("DOCTOR_CPF");
+
+                    b.Property<string>("PatientCpf")
+                        .IsRequired()
+                        .HasColumnName("PATIENT_CPF");
+
+                    b.Property<int>("RescheludedAppointmentId")
+                        .HasColumnName("RE_SCHEDULED_APPOINTMENT_ID");
+
+                    b.Property<int>("Status")
+                        .HasColumnName("STATUS");
+
+                    b.HasKey("AppointmentId");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("DoctorCpf");
+
+                    b.HasIndex("PatientCpf");
+
+                    b.ToTable("APPOINTMENT");
+                });
+
             modelBuilder.Entity("APICore.Models.DaysOfTheWeek", b =>
                 {
                     b.Property<int>("Id")
@@ -218,8 +256,7 @@ namespace APICore.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("Cpf")
-                        .IsUnique();
+                    b.HasIndex("Cpf");
 
                     b.ToTable("M_TIMESHEET");
                 });
@@ -252,6 +289,24 @@ namespace APICore.Migrations
                         .WithMany("Addresses")
                         .HasForeignKey("Cpf")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("APICore.Models.Appointment", b =>
+                {
+                    b.HasOne("APICore.Models.Address", "Address")
+                        .WithMany("Appointments")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("APICore.Models.Doctor", "Doctor")
+                        .WithMany("Appointments")
+                        .HasForeignKey("DoctorCpf")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("APICore.Models.Patient", "Patient")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientCpf")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("APICore.Models.DaysOfTheWeek", b =>
@@ -294,8 +349,8 @@ namespace APICore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("APICore.Models.Doctor", "Doctor")
-                        .WithOne("TimeSheet")
-                        .HasForeignKey("APICore.Models.TimeSheet", "Cpf")
+                        .WithMany("TimeSheets")
+                        .HasForeignKey("Cpf")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

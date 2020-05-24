@@ -65,6 +65,7 @@ namespace APICore.Providers.ContextSettings
                  .IsRequired();
 
             modelbuilder.HasOne(a => a.TimeSheet).WithOne(a => a.Address).HasForeignKey<TimeSheet>(a => a.AddressId).IsRequired();
+            modelbuilder.HasMany(d => d.Appointments).WithOne(d => d.Address).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }

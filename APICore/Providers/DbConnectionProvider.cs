@@ -17,6 +17,7 @@ namespace APICore.Database
         public DbSet<Address> Address { get; set; }
         public DbSet<TimeSheet> TimeSheet { get; set; }
         public DbSet<DaysOfTheWeek> DaysOfTheWeek { get; set; }
+        public DbSet<Appointment> Appointment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder) {
             base.OnModelCreating(modelbuilder);
@@ -29,6 +30,7 @@ namespace APICore.Database
             modelbuilder.ApplyConfiguration(new AddressEntitySettings());
             modelbuilder.ApplyConfiguration(new TimeSheetEntitySettings());
             modelbuilder.ApplyConfiguration(new DaysOfTheWeekEntitySettings());
+            modelbuilder.ApplyConfiguration(new AppointmentEntitySettings());
         }
     }
 }

@@ -26,6 +26,14 @@ namespace APICore.Repositories
                 .Single();
         }
 
+        public virtual TimeSheet Find(string cpf, int addressId)
+        {
+            return _context.TimeSheet
+                .Where(d => d.Cpf == cpf)
+                .Where(a => a.AddressId == addressId)                
+                .SingleOrDefault();
+        }
+
         public IEnumerable<TimeSheet> GetAll(int addressId, string cpf) {
             return _context.TimeSheet
                 .Where(t => t.AddressId == addressId)

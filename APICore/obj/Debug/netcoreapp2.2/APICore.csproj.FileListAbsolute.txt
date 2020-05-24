@@ -61,3 +61,6 @@ C:\Matheus\doctor-schedule--api\APICore\obj\Debug\netcoreapp2.2\APICore.RazorTar
 C:\Matheus\doctor-schedule--api\APICore\obj\Debug\netcoreapp2.2\APICore.dll
 C:\Matheus\doctor-schedule--api\APICore\obj\Debug\netcoreapp2.2\APICore.pdb
 C:\Matheus\doctor-schedule--api\APICore\obj\Debug\netcoreapp2.2\APICore.genruntimeconfig.cache
+C:\Matheus\doctor-schedule--api\APICore\obj\Debug\netcoreapp2.2\APICore.csprojAssemblyReference.cache
+C:\Matheus\doctor-schedule--api\APICore\bin\Debug\netcoreapp2.2\Properties\serviceDependencies.AgendaMedicoAPI - Web Deploy.json
+C:\Matheus\doctor-schedule--api\APICore\bin\Debug\netcoreapp2.2\Properties\serviceDependencies.json

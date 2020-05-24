@@ -10,6 +10,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>2b34726e-c3bc-4d83-a4c8-dcfcc6975d71</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,8 @@
     <Compile Remove="Migrations\20200509190123_InitializeCreate.Designer.cs" />
     <Compile Remove="Migrations\20200510222001_CreateTimeSheetTable.cs" />
     <Compile Remove="Migrations\20200510222001_CreateTimeSheetTable.Designer.cs" />
+    <Compile Remove="Migrations\20200516190611_CreateAppointmentTable.cs" />
+    <Compile Remove="Migrations\20200516190611_CreateAppointmentTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

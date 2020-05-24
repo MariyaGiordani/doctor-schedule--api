@@ -14,5 +14,6 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <WebStackScaffolding_DbContextTypeFullName>APICore.Database.DbConnectionProvider</WebStackScaffolding_DbContextTypeFullName>
+    <NameOfLastUsedPublishProfile>AgendaMedicoAPI - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

@@ -30,6 +30,8 @@ namespace APICore.Providers.ContextSettings
             modelbuilder.Property(p => p.Id)
                  .HasColumnName("USER_ID")
                  .IsRequired();
+
+            modelbuilder.HasMany(d => d.Appointments).WithOne(d => d.Patient).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace APICore.Models
@@ -24,8 +24,10 @@ namespace APICore.Models
         }
 
         public int Id { get; set; }
-        [System.Text.Json.Serialization.JsonIgnore]
+        [JsonIgnore]
         public User User { get; set; }
+        [JsonIgnore]
+        public ICollection<Appointment> Appointments { get; set; }
 
         public bool PatientIsValid(ref string message, bool isValid = true) {
             if (Cpf == "") {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace APICore.Models
@@ -30,7 +31,10 @@ namespace APICore.Models
         public TimeSheet TimeSheet { get; set; }
         public string Telephone { get; set; }
         public string HealthCare { get; set; }
-        
+        [JsonIgnore]        
+        public ICollection<Appointment> Appointments { get; set; }
+
+
         public bool AddressIsValid(ref string message, bool isValid = true)
         {
             if (RoadType == "")
