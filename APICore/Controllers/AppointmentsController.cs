@@ -252,10 +252,10 @@ namespace APICore.Controllers
             }                            
         }
 
-        [HttpGet("")]
-        public IEnumerable<Availability> GetAvailabilities(string cpf)
-        {
+        //[HttpGet("")]
+        //public IEnumerable<Availability> GetAvailabilities(string cpf)
+        //{
 
-        }
+        //}
     }
 }
