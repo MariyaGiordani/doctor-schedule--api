@@ -54,6 +54,7 @@ namespace APICore.Controllers
 
             try
             {
+                int dias = 0;
                 if (_appointmentRepository.AppointmentExists(appointment))
                 {
                     Appointment _appointment = _appointmentRepository.Find(appointment.AppointmentId, appointment.AddressId,
@@ -62,8 +63,15 @@ namespace APICore.Controllers
                     if (appointment.Status == AppointmentStatus.Canceled)
                     {
                         TimeSheet timeSheet = _timeSheetRepository.Find(appointment.DoctorCpf, appointment.AddressId);
+                        
+                        if (timeSheet.AppointmentCancelTime == "24h")
+                        {
+                            dias = -1;                            
+                        }else {
+                            dias = -2;
+                        }
 
-                        DateTime CancelDate = _appointment.AppointmentTime.Subtract(TimeSpan.FromHours(timeSheet.AppointmentCancelTime.Hour));
+                        DateTime CancelDate = _appointment.AppointmentTime.AddDays(dias);
 
                         if (DateTime.Compare(DateTime.Now, CancelDate) == -1)
                         {
@@ -81,7 +89,7 @@ namespace APICore.Controllers
                         else { 
                             RetornoWS retornoWS = new RetornoWS
                             {
-                                Mensagem = $"Não foi possível cancelar a consulta com menos de {timeSheet.AppointmentCancelTime.Hour} horas de antecedência.",
+                                Mensagem = $"Não foi possível cancelar a consulta com menos de {timeSheet.AppointmentCancelTime} horas de antecedência.",
                                 Sucesso = false
                             };
 
@@ -93,7 +101,16 @@ namespace APICore.Controllers
                     {
                         TimeSheet timeSheet = _timeSheetRepository.Find(appointment.DoctorCpf, appointment.AddressId);
 
-                        DateTime CancelDate = _appointment.AppointmentTime.Subtract(TimeSpan.FromHours(timeSheet.AppointmentCancelTime.Hour));
+                        if (timeSheet.AppointmentCancelTime == "24h")
+                        {
+                            dias = -1;
+                        }
+                        else
+                        {
+                            dias = -2;
+                        }
+
+                        DateTime CancelDate = _appointment.AppointmentTime.AddDays(dias);
 
                         if (DateTime.Compare(DateTime.Now, CancelDate) == -1)
                         {

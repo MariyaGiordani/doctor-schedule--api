@@ -36,7 +36,7 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName) {
+        public IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName, string neighborhood) {
             var result = _context.Doctor.AsQueryable();
 
             if (speciality != null) {
@@ -49,6 +49,11 @@ namespace APICore.Repositories
 
             if (lastName != null) {
                 result = result.Where(d => d.LastName.Contains(lastName));
+            }
+
+            if (neighborhood != null)
+            {
+                //result = result.Join()
             }
             return result.ToList();
         }

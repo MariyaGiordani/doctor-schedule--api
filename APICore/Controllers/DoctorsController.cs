@@ -22,17 +22,33 @@ namespace APICore.Controllers
         }
 
         [HttpGet("search")]
-        public IActionResult SearchDoctors(string speciality, string firstName, string lastName) {
-            if ((speciality == null) && (firstName == null) && (lastName == null)){
+        public IActionResult SearchDoctors(string speciality, string firstName, string lastName, string neighborhood) {
+            if ((speciality == null) && (firstName == null) && (lastName == null) && (neighborhood == null))
+            {
                 RetornoWS retorno = new RetornoWS {
                     Mensagem = "Necessário informar pelo menos um filtro.",
                     Sucesso = false
                 };
 
                 return BadRequest(retorno);
-            }            
+            }
 
-            return Ok(_doctorRepository.GetDoctor(speciality, firstName, lastName));
+            IEnumerable<Doctor> doctors = _doctorRepository.GetDoctor(speciality, firstName, lastName, neighborhood);
+
+            if (doctors == null)
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = "Nenhum médico encontrado.",
+                    Sucesso = false
+                };
+
+                return Ok(retorno);
+            }
+            else
+            {
+                return Ok(doctors);
+            }            
         }
 
         [HttpPut("{cpf}")]

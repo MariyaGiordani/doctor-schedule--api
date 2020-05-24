@@ -4,14 +4,16 @@ using APICore.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace APICore.Migrations
 {
     [DbContext(typeof(DbConnectionProvider))]
-    partial class DbConnectionProviderModelSnapshot : ModelSnapshot
+    [Migration("20200524215641_AlterarCamposTimeSheet")]
+    partial class AlterarCamposTimeSheet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

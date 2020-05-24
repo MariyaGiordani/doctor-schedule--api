@@ -12,14 +12,14 @@ namespace APICore.Models
         public DateTime EndDate { get; set; }
         public DateTime LunchStartDate { get; set; }
         public DateTime LunchEndDate { get; set; }
-        public DateTime AppointmentDuration { get; set; }
+        public string AppointmentDuration { get; set; }
         [JsonIgnore]
         public Doctor Doctor { get; set; }
         public string Cpf { get; set; }
         [JsonIgnore]
         public Address Address { get; set; }
         public int AddressId { get; set; }
-        public DateTime AppointmentCancelTime { get; set; }
+        public string AppointmentCancelTime { get; set; }
         public ICollection<DaysOfTheWeek> DaysOfTheWeeks { get; set; }
 
         public bool TimeSheetIsValid(ref string message, bool isValid = true)
