@@ -205,10 +205,10 @@ namespace APICore.Controllers
             }
         }
 
-        [HttpGet]
-        public IEnumerable<TimeSheet> GetTimeSheet(int addressId, string cpf)
-        {
-            return _timeSheetRepository.GetAll(addressId, cpf);
-        }
+        //[HttpGet]
+        //public IEnumerable<TimeSheet> GetTimeSheet(int addressId, string cpf)
+        //{
+        //    return _timeSheetRepository.GetTimeSheets(addressId, cpf);
+        //}
     }
 }

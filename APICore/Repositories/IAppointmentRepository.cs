@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using APICore.Models;
 
 namespace APICore.Repositories
@@ -15,5 +16,6 @@ namespace APICore.Repositories
         bool AppointmentExists(int appointmentId);
         IEnumerable<Appointment> GetDoctorAppointments(string cpf);
         IEnumerable<Appointment> GetPatientAppointments(string cpf);
+        IEnumerable<Appointment> GetDoctorAppointmentsByDay(string cpf, DateTime day);
     }
 }

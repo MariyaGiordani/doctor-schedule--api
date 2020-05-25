@@ -1,5 +1,6 @@
 ﻿using APICore.Database;
 using APICore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,6 +74,15 @@ namespace APICore.Repositories
         {
             return _context.Appointment
                 .Where(a => a.PatientCpf == cpf)                
+                .ToList();
+        }
+
+        public IEnumerable<Appointment> GetDoctorAppointmentsByDay(string cpf, DateTime day)
+        {
+            return _context.Appointment
+                .Where(a => a.DoctorCpf == cpf)
+                .Where(a => a.AppointmentTime.Day == day.Day)
+                .Where(a => a.Status == AppointmentStatus.Scheduled)
                 .ToList();
         }
     }

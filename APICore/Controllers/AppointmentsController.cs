@@ -4,6 +4,8 @@ using APICore.Models;
 using System;
 using Microsoft.AspNetCore.Cors;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace APICore.Controllers
 {
@@ -269,10 +271,77 @@ namespace APICore.Controllers
             }                            
         }
 
-        //[HttpGet("")]
-        //public IEnumerable<Availability> GetAvailabilities(string cpf)
+        //[HttpGet("GetAvailabilities")]
+        //public IActionResult GetAvailabilities(string cpf, string month)
         //{
+        //    if ((cpf == null) || (month == null))
+        //    {
+        //        return BadRequest();
+        //    }
 
+        //    JulianCalendar calendario = new JulianCalendar();
+        //    calendario.AddMonths();
+        //    return calendario;
         //}
+
+        [HttpGet("GetAvailability")]
+        public IActionResult GetAvailability(string cpf, DateTime appointmentDate, int addressId)
+        {
+            if ((cpf == null) || (appointmentDate == null))
+            {
+                return BadRequest();
+            }
+
+            if (!_doctorRepository.DoctorExists(cpf))
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = "Não foi possível encontrar o médico.",
+                    Sucesso = false
+                };
+
+                return NotFound(retorno);
+            }
+
+            List<DateTime> availableHours = new List<DateTime>();
+            TimeSheet timeSheet = _timeSheetRepository.GetTimeSheet(addressId, cpf);
+            IEnumerable<Appointment> appointments = _appointmentRepository.GetDoctorAppointmentsByDay(cpf, appointmentDate);
+
+            int minutes;
+            
+            if (timeSheet.AppointmentDuration == "15 min")
+            {
+                minutes = 15;
+            }
+            else if (timeSheet.AppointmentDuration == "30 min")
+            {
+                minutes = 30;
+            }
+            else
+            {
+                minutes = 60;
+            }
+
+            DateTime date = timeSheet.StartDate;            
+            
+            while (date < timeSheet.LunchStartDate)
+            {
+                if (appointments.Where(a => a.AppointmentTime.TimeOfDay == date.TimeOfDay).FirstOrDefault() == null)
+                    availableHours.Add(date);
+                date = date.AddMinutes(minutes);
+            }
+
+            date = timeSheet.LunchEndDate;
+            
+            while (date < timeSheet.EndDate)
+            {
+                if (appointments.Where(a => a.AppointmentTime.TimeOfDay == date.TimeOfDay).FirstOrDefault() == null)
+                    availableHours.Add(date);
+                date = date.AddMinutes(minutes);
+            }
+
+
+            return Ok(availableHours);
+        }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using Microsoft.AspNetCore.Cors;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace APICore.Controllers
 {
@@ -35,19 +36,23 @@ namespace APICore.Controllers
 
             IEnumerable<Doctor> doctors = _doctorRepository.GetDoctor(speciality, firstName, lastName, neighborhood);
 
-            if (doctors == null)
+            if (doctors.Any() == false)
             {
                 RetornoWS retorno = new RetornoWS
                 {
                     Mensagem = "Nenhum médico encontrado.",
-                    Sucesso = false
+                    Sucesso = true
                 };
 
-                return Ok(retorno);
+                return NotFound(retorno);
             }
             else
             {
-                return Ok(doctors);
+                var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+
+                string json = JsonConvert.SerializeObject(doctors, Formatting.Indented, serializerSettings);
+
+                return Content(json, "application/json");                
             }            
         }
 

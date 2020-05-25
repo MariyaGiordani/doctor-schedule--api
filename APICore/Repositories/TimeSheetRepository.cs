@@ -34,11 +34,11 @@ namespace APICore.Repositories
                 .SingleOrDefault();
         }
 
-        public IEnumerable<TimeSheet> GetAll(int addressId, string cpf) {
+        public TimeSheet GetTimeSheet(int addressId, string cpf) {
             return _context.TimeSheet
                 .Where(t => t.AddressId == addressId)
                 .Where(t =>t.Cpf == cpf)
-                .ToList();
+                .SingleOrDefault();
         }
 
         public void Remove(int timeSheetId, int addressId, string cpf) {
@@ -56,7 +56,7 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<TimeSheet> GetTimeSheet(string cpf) {            
+        public IEnumerable<TimeSheet> GetTimeSheets(string cpf) {            
             return _context.TimeSheet.Where(d => d.Cpf == cpf).ToList();
         }
 

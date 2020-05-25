@@ -231,3 +231,37 @@ END;
 
 GO
 
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20200524215641_AlterarCamposTimeSheet')
+BEGIN
+    DECLARE @var0 sysname;
+    SELECT @var0 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[M_TIMESHEET]') AND [c].[name] = N'APPOINTMENT_DURATION');
+    IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [M_TIMESHEET] DROP CONSTRAINT [' + @var0 + '];');
+    ALTER TABLE [M_TIMESHEET] ALTER COLUMN [APPOINTMENT_DURATION] nvarchar(max) NOT NULL;
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20200524215641_AlterarCamposTimeSheet')
+BEGIN
+    DECLARE @var1 sysname;
+    SELECT @var1 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[M_TIMESHEET]') AND [c].[name] = N'APPOINTMENT_CANCEL_TIME');
+    IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [M_TIMESHEET] DROP CONSTRAINT [' + @var1 + '];');
+    ALTER TABLE [M_TIMESHEET] ALTER COLUMN [APPOINTMENT_CANCEL_TIME] nvarchar(max) NOT NULL;
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20200524215641_AlterarCamposTimeSheet')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20200524215641_AlterarCamposTimeSheet', N'2.2.6-servicing-10079');
+END;
+
+GO
+

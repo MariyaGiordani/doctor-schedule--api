@@ -1,5 +1,7 @@
 ﻿using APICore.Database;
 using APICore.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,6 +57,9 @@ namespace APICore.Repositories
             {
                 //result = result.Join()
             }
+
+            result = result.Include(d => d.Addresses);
+
             return result.ToList();
         }
 
