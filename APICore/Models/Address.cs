@@ -37,11 +37,11 @@ namespace APICore.Models
 
         public bool AddressIsValid(ref string message, bool isValid = true)
         {
-            if (RoadType == "")
-            {
-                message += "Road Type,";
-                isValid = false;
-            }
+            //if (RoadType == "")
+            //{
+            //    message += "Road Type,";
+            //    isValid = false;
+            //}
 
             if (Street == "")
             {
