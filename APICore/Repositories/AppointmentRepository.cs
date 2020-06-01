@@ -1,8 +1,10 @@
 ﻿using APICore.Database;
 using APICore.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APICore.Models.ViewModels;
 
 namespace APICore.Repositories
 {
@@ -63,26 +65,99 @@ namespace APICore.Repositories
                    .Where(a => a.AppointmentId == appointmentId).FirstOrDefault() != null;
         }
 
-        public IEnumerable<Appointment> GetDoctorAppointments(string cpf)
+        public IEnumerable<DoctorAppointmentViewModel> GetDoctorAppointments(string cpf)
         {
-            return _context.Appointment
-                .Where(a => a.DoctorCpf == cpf)
+            return _context.Doctor
+                .Join(
+                        _context.Appointment,
+                        doctor => doctor.Cpf,
+                        appointment => appointment.DoctorCpf,
+                        (doctor, appointment) => new
+                        {
+                            doctor,
+                            appointment
+                        })
+                .Join(
+                       _context.Address,
+                       appointment => appointment.appointment.AddressId,
+                       address => address.AddressId,
+                       (appointment, address) => new
+                       {
+                           appointment,
+                           address
+                       })
+                .Join(
+                      _context.Patient,
+                     appointment => appointment.appointment.appointment.PatientCpf,
+                     patient => patient.Cpf,
+                     (appointment, patient) => new
+                     {
+                         appointment,
+                         patient
+                     })
+                .Select(x => new DoctorAppointmentViewModel
+                {
+                    DoctorCpf = x.appointment.appointment.appointment.DoctorCpf,
+                    PatientCpf = x.appointment.appointment.appointment.PatientCpf,
+                    AppointmentTime = x.appointment.appointment.appointment.AppointmentTime,
+                    PatientFirstName = x.patient.FirstName,
+                    PatientLastName = x.patient.LastName,
+                    Address = x.appointment.appointment.appointment.Address
+                })
                 .ToList();
         }
 
-        public IEnumerable<Appointment> GetPatientAppointments(string cpf)
+        public IEnumerable<PatientAppointmentViewModel> GetPatientAppointments(string cpf)
         {
-            return _context.Appointment
-                .Where(a => a.PatientCpf == cpf)                
+            return _context.Patient
+                .Join(
+                        _context.Appointment,
+                        patient => patient.Cpf,
+                        appointment => appointment.PatientCpf,
+                        (patient, appointment) => new
+                        {
+                            patient,
+                            appointment
+                        })
+                .Join(
+                       _context.Address,
+                       appointment => appointment.appointment.AddressId,
+                       address => address.AddressId,
+                       (appointment, address) => new
+                       {
+                           appointment,
+                           address
+                       })
+                .Join(
+                      _context.Doctor,
+                     appointment => appointment.appointment.appointment.DoctorCpf,
+                     doctor => doctor.Cpf,
+                     (appointment, doctor) => new
+                     {
+                         appointment,
+                         doctor
+                     })
+                .Where(p => p.appointment.appointment.appointment.AppointmentTime >= DateTime.Now)
+                .Where(p => p.appointment.appointment.appointment.Status == AppointmentStatus.Scheduled)
+                .Select(x => new PatientAppointmentViewModel
+                {
+                    DoctorCpf = x.appointment.appointment.appointment.DoctorCpf,
+                    PatientCpf = x.appointment.appointment.appointment.PatientCpf,
+                    AppointmentTime = x.appointment.appointment.appointment.AppointmentTime,
+                    DoctorFirstName = x.doctor.FirstName,
+                    DoctorLastName = x.doctor.LastName,
+                    Address = x.appointment.appointment.appointment.Address
+                })
                 .ToList();
         }
-
+        
         public IEnumerable<Appointment> GetDoctorAppointmentsByDay(string cpf, DateTime day)
         {
             return _context.Appointment
                 .Where(a => a.DoctorCpf == cpf)
                 .Where(a => a.AppointmentTime.Day == day.Day)
                 .Where(a => a.Status == AppointmentStatus.Scheduled)
+                .Include(d => d.Doctor)
                 .ToList();
         }
     }

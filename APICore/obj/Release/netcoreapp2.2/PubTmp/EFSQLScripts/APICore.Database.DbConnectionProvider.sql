@@ -265,3 +265,18 @@ END;
 
 GO
 
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20200528011443_AddFieldFodase')
+BEGIN
+    ALTER TABLE [APPOINTMENT] ADD [APPOINTMENT_END_TIME] datetime2 NOT NULL DEFAULT '0001-01-01T00:00:00.0000000';
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20200528011443_AddFieldFodase')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20200528011443_AddFieldFodase', N'2.2.6-servicing-10079');
+END;
+
+GO
+

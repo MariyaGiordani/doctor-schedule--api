@@ -4,6 +4,7 @@ namespace APICore.Models
 {
     public class Availability
     {
-        public DateTime availableDate { get; set; }
+        public DateTime availableStartDate { get; set; }
+        public DateTime availableEndDate { get; set; }
     }
 }

@@ -55,10 +55,12 @@ namespace APICore.Repositories
 
             if (neighborhood != null)
             {
-                //result = result.Join()
+                result = result.Where(d => d.Addresses.Any(n => n.Neighborhood == neighborhood));
             }
-
+            
             result = result.Include(d => d.Addresses);
+            result = result.Where(d => d.Addresses != null);
+            result = result.Include(d => d.TimeSheets).ThenInclude(d => d.DaysOfTheWeeks);
 
             return result.ToList();
         }

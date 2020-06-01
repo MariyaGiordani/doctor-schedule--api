@@ -73,11 +73,11 @@ namespace APICore.Models
                 isValid = false;
             }
 
-            if (UF == "")
-            {
-                message += "UF";
-                isValid = false;
-            }
+            //if (UF == "")
+            //{
+            //    message += "UF";
+            //    isValid = false;
+            //}
 
             if (message.LastIndexOf(",") != -1)
             {

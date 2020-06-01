@@ -37,7 +37,11 @@ namespace APICore.Providers.ContextSettings
 
             modelbuilder.Property(m => m.AddressId)
                  .HasColumnName("ADDRESS_ID")
-                 .IsRequired();            
+                 .IsRequired();
+
+            modelbuilder.Property(m => m.AppointmentEndTime)
+                 .HasColumnName("APPOINTMENT_END_TIME")
+                 .IsRequired();
         }
     }
 }

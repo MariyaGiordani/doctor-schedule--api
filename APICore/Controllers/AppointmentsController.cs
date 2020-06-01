@@ -4,8 +4,10 @@ using APICore.Models;
 using System;
 using Microsoft.AspNetCore.Cors;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
+using APICore.Models.ViewModels;
 
 namespace APICore.Controllers
 {
@@ -17,18 +19,16 @@ namespace APICore.Controllers
         private readonly IDoctorRepository _doctorRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly ITimeSheetRepository _timeSheetRepository;
-        private readonly IDaysOfTheWeekRepository _daysOfTheWeekRepository;
         private readonly IPatientRepository _patientRepository;
         private readonly IAppointmentRepository _appointmentRepository;
 
         public AppointmentsController(IDoctorRepository doctorRepository, IAddressRepository addressRepository,
-            ITimeSheetRepository timeSheetRepository, IDaysOfTheWeekRepository daysOfTheWeekRepository,
+            ITimeSheetRepository timeSheetRepository,
             IPatientRepository patientRepository, IAppointmentRepository appointmentRepository)
         {
             _doctorRepository = doctorRepository;
             _addressRepository = addressRepository;
-            _timeSheetRepository = timeSheetRepository;
-            _daysOfTheWeekRepository = daysOfTheWeekRepository;
+            _timeSheetRepository = timeSheetRepository;           
             _patientRepository = patientRepository;
             _appointmentRepository = appointmentRepository;
         }
@@ -116,16 +116,46 @@ namespace APICore.Controllers
 
                         if (DateTime.Compare(DateTime.Now, CancelDate) == -1)
                         {
-                            Appointment appointmentRescheduled = new Appointment();
+                            Appointment appointmentRescheduled = new Appointment
+                            {
+                                AppointmentTime = appointment.AppointmentTime,
+                                Status = AppointmentStatus.Scheduled,
+                                RescheludedAppointmentId = appointment.AppointmentId,
+                                DoctorCpf = appointment.DoctorCpf,
+                                PatientCpf = appointment.PatientCpf,
+                                AddressId = appointment.AddressId
+                            };
 
-                            appointmentRescheduled.AppointmentTime = appointment.AppointmentTime;
-                            appointmentRescheduled.Status = AppointmentStatus.Scheduled;
-                            appointmentRescheduled.RescheludedAppointmentId = appointment.AppointmentId;
-                            appointmentRescheduled.DoctorCpf = appointment.DoctorCpf;
-                            appointmentRescheduled.PatientCpf = appointment.PatientCpf;
-                            appointmentRescheduled.AddressId = appointment.AddressId;
+                            int minutes;
+
+                            if (timeSheet.AppointmentDuration == "15 min")
+                            {
+                                minutes = 15;
+                            }
+                            else if (timeSheet.AppointmentDuration == "30 min")
+                            {
+                                minutes = 30;
+                            }
+                            else
+                            {
+                                minutes = 60;
+                            }
+
+                            appointmentRescheduled.AppointmentEndTime = appointment.AppointmentTime.AddMinutes(minutes);
 
                             _appointmentRepository.Add(appointmentRescheduled);
+
+                            _appointment.Status = appointment.Status;
+
+                            _appointmentRepository.Update(_appointment);
+
+                            RetornoWS retorno = new RetornoWS
+                            {
+                                Mensagem = "Consulta atualizada com sucesso.",
+                                Sucesso = true
+                            };
+
+                            return Ok(retorno);
                         }
                         else
                         {
@@ -138,19 +168,16 @@ namespace APICore.Controllers
                             return BadRequest(retornoWS);
                         }
                     }
-
-                    _appointment.AppointmentTime = appointment.AppointmentTime;
-                    _appointment.Status = appointment.Status;
-
-                    _appointmentRepository.Update(_appointment);
-
-                    RetornoWS retorno = new RetornoWS
+                    else
                     {
-                        Mensagem = "Consulta atualizada com sucesso.",
-                        Sucesso = true
-                    };
+                        RetornoWS retornoWS = new RetornoWS
+                        {
+                            Mensagem = "Status inválido.",
+                            Sucesso = false
+                        };
 
-                    return Ok(retorno);
+                        return BadRequest(retornoWS);
+                    }
                 }
                 else
                 {
@@ -233,6 +260,25 @@ namespace APICore.Controllers
                         return BadRequest(retornoWS);
                     }
 
+                    TimeSheet timeSheet = _timeSheetRepository.Find(appointment.DoctorCpf, appointment.AddressId);
+
+                    int minutes;
+
+                    if (timeSheet.AppointmentDuration == "15 min")
+                    {
+                        minutes = 15;
+                    }
+                    else if (timeSheet.AppointmentDuration == "30 min")
+                    {
+                        minutes = 30;
+                    }
+                    else
+                    {
+                        minutes = 60;
+                    }
+
+                    appointment.AppointmentEndTime = appointment.AppointmentTime.AddMinutes(minutes);
+
                     _appointmentRepository.Add(appointment);
 
                     RetornoWS retorno = new RetornoWS
@@ -257,17 +303,17 @@ namespace APICore.Controllers
         }
 
         [HttpGet("GetAppointments")]
-        public IEnumerable<Appointment> GetAppointments(string cpf)
+        public IActionResult GetAppointments(string cpf)
         {
             if (_doctorRepository.DoctorExists(cpf))
             {
-                IEnumerable<Appointment> doctorAppointments = _appointmentRepository.GetDoctorAppointments(cpf);
-                return doctorAppointments;
+                IEnumerable<DoctorAppointmentViewModel> doctorAppointments = _appointmentRepository.GetDoctorAppointments(cpf);
+                return Ok(doctorAppointments);
             }
             else
             {
-                IEnumerable<Appointment> patientAppointments = _appointmentRepository.GetPatientAppointments(cpf);
-                return patientAppointments;
+                IEnumerable<PatientAppointmentViewModel> patientAppointments = _appointmentRepository.GetPatientAppointments(cpf);
+                return Ok(patientAppointments);
             }                            
         }
 
@@ -279,9 +325,16 @@ namespace APICore.Controllers
         //        return BadRequest();
         //    }
 
-        //    JulianCalendar calendario = new JulianCalendar();
-        //    calendario.AddMonths();
-        //    return calendario;
+        //    if (!_doctorRepository.DoctorExists(cpf))
+        //    {
+        //        RetornoWS retorno = new RetornoWS
+        //        {
+        //            Mensagem = "Não foi possível encontrar o médico.",
+        //            Sucesso = false
+        //        };
+
+        //        return NotFound(retorno);
+        //    }            
         //}
 
         [HttpGet("GetAvailability")]
@@ -290,6 +343,17 @@ namespace APICore.Controllers
             if ((cpf == null) || (appointmentDate == null))
             {
                 return BadRequest();
+            }
+
+            if (appointmentDate < DateTime.Now)
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = "Não é possível marcar consulta para uma data passada.",
+                    Sucesso = false
+                };
+
+                return BadRequest(retorno);
             }
 
             if (!_doctorRepository.DoctorExists(cpf))
@@ -301,10 +365,38 @@ namespace APICore.Controllers
                 };
 
                 return NotFound(retorno);
+            }            
+
+            TimeSheet timeSheet = _timeSheetRepository.GetTimeSheet(addressId, cpf);
+
+            int dayOfTheWeek = (int)appointmentDate.DayOfWeek;
+            
+            if (timeSheet.DaysOfTheWeeks.Any(w => (int)w.Name == dayOfTheWeek) == false)
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = "O médico não trabalha neste dia.",
+                    Sucesso = false
+                };
+
+                return BadRequest(retorno);
             }
 
-            List<DateTime> availableHours = new List<DateTime>();
-            TimeSheet timeSheet = _timeSheetRepository.GetTimeSheet(addressId, cpf);
+            //foreach (var day in timeSheet.DaysOfTheWeeks)
+            //{
+            //    if ((int)day.Name != dayOfTheWeek)
+            //    {
+            //        RetornoWS retorno = new RetornoWS
+            //        {
+            //            Mensagem = "O médico não trabalha neste dia.",
+            //            Sucesso = false
+            //        };
+
+            //        return BadRequest(retorno);
+            //    }                    
+            //}
+
+            List<Availability> availableHours = new List<Availability>();                        
             IEnumerable<Appointment> appointments = _appointmentRepository.GetDoctorAppointmentsByDay(cpf, appointmentDate);
 
             int minutes;
@@ -326,8 +418,16 @@ namespace APICore.Controllers
             
             while (date < timeSheet.LunchStartDate)
             {
-                if (appointments.Where(a => a.AppointmentTime.TimeOfDay == date.TimeOfDay).FirstOrDefault() == null)
-                    availableHours.Add(date);
+                if (appointments.Where(a => a.AppointmentTime.TimeOfDay == date.TimeOfDay).FirstOrDefault() == null) {
+
+                    Availability availableHour = new Availability
+                    {
+                        availableStartDate = date,
+                        availableEndDate = date.AddMinutes(minutes)
+                    };
+
+                    availableHours.Add(availableHour);
+                }
                 date = date.AddMinutes(minutes);
             }
 
@@ -336,12 +436,32 @@ namespace APICore.Controllers
             while (date < timeSheet.EndDate)
             {
                 if (appointments.Where(a => a.AppointmentTime.TimeOfDay == date.TimeOfDay).FirstOrDefault() == null)
-                    availableHours.Add(date);
+                {
+                    Availability availableHour = new Availability
+                    {
+                        availableStartDate = date,
+                        availableEndDate = date.AddMinutes(minutes)
+                    };
+
+                    availableHours.Add(availableHour);
+                }
+                
                 date = date.AddMinutes(minutes);
             }
 
+            if (availableHours != null) { 
+                return Ok(availableHours);
+            }
+            else
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = "Não há horários disponíveis para este dia.",
+                    Sucesso = false
+                };
 
-            return Ok(availableHours);
+                return NotFound(retorno);
+            }
         }
     }
 }

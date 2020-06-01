@@ -24,7 +24,7 @@ namespace APICore.Models
         [JsonIgnore]
         public Address Address { get; set; }
         public int AddressId { get; set; }
-
+        public DateTime AppointmentEndTime { get; set; }
         public bool AppointmentIsValid(ref string message, bool isValid = true)
         {
             if (AppointmentTime == null)

@@ -3,8 +3,6 @@ using APICore.Repositories;
 using APICore.Models;
 using System;
 using Microsoft.AspNetCore.Cors;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace APICore.Controllers
 {

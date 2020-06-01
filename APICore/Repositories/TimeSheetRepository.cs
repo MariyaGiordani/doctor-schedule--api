@@ -1,5 +1,6 @@
 ﻿using APICore.Database;
 using APICore.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,7 +38,8 @@ namespace APICore.Repositories
         public TimeSheet GetTimeSheet(int addressId, string cpf) {
             return _context.TimeSheet
                 .Where(t => t.AddressId == addressId)
-                .Where(t =>t.Cpf == cpf)
+                .Where(t => t.Cpf == cpf)
+                .Include(t => t.DaysOfTheWeeks)
                 .SingleOrDefault();
         }
 

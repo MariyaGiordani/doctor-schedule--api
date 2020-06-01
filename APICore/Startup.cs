@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace APICore
 {
@@ -32,11 +33,9 @@ namespace APICore
                     builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod());
             });
 
-            //services.Configure<MvcOptions>(options => {
-            //    options.Filters.Add(new CorsAuthorizationFilterFactory("AllowMyOrigin"));
-            //});
-
-            //services.TryAddTransient<CorsAuthorizationFilter, CorsAuthorizationFilter>();
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             services.AddDbContext<DbConnectionProvider>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
