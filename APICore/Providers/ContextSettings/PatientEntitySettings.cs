@@ -7,7 +7,7 @@ namespace APICore.Providers.ContextSettings
     public class PatientEntitySettings : IEntityTypeConfiguration<Patient>
     {
         public void Configure(EntityTypeBuilder<Patient> modelbuilder) {
-            modelbuilder.ToTable("P_PATIENT");
+            modelbuilder.ToTable("PATIENT");
 
             modelbuilder.HasKey(p => p.Cpf);
 

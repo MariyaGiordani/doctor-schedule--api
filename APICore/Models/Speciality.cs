@@ -6,6 +6,7 @@ namespace APICore.Models
     public class Speciality
     {
         private readonly List<string> Specialities = new List<string> {
+            "NENHUMA",
             "ACUPUNTURA",
             "ALERGIA E IMUNOLOGIA",
             "ANESTESIOLOGIA",

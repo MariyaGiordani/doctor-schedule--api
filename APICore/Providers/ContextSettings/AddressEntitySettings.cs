@@ -8,7 +8,7 @@ namespace APICore.Providers.ContextSettings
     {
         public void Configure(EntityTypeBuilder<Address> modelbuilder)
         {
-            modelbuilder.ToTable("M_ADDRESS");
+            modelbuilder.ToTable("ADDRESS");
 
             modelbuilder.HasKey(m => m.AddressId);
 
@@ -62,6 +62,10 @@ namespace APICore.Providers.ContextSettings
 
             modelbuilder.Property(m => m.HealthCare)
                  .HasColumnName("HEALTHCARE")
+                 .IsRequired();
+
+            modelbuilder.Property(m => m.Status)
+                 .HasColumnName("STATUS")
                  .IsRequired();
 
             modelbuilder.HasOne(a => a.TimeSheet).WithOne(a => a.Address).HasForeignKey<TimeSheet>(a => a.AddressId).IsRequired();

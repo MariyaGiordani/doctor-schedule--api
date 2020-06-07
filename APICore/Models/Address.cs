@@ -11,6 +11,12 @@ namespace APICore.Models
         Remove = 3
     }
 
+    public enum AddressStatus
+    {
+        Active = 1,
+        Deactivated = 2
+    }
+
     public class Address
     {
         public int AddressId { get; set; }
@@ -27,12 +33,14 @@ namespace APICore.Models
         public Doctor Doctor { get; set; }
         public string Cpf { get; set; }
         [NotMapped]
+        [JsonIgnore]
         public AddressAction AddressAction { get; set; }       
         public TimeSheet TimeSheet { get; set; }
         public string Telephone { get; set; }
         public string HealthCare { get; set; }
         [JsonIgnore]        
         public ICollection<Appointment> Appointments { get; set; }
+        public AddressStatus Status { get; set; }
 
 
         public bool AddressIsValid(ref string message, bool isValid = true)

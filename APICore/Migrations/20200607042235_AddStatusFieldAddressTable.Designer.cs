@@ -4,14 +4,16 @@ using APICore.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace APICore.Migrations
 {
     [DbContext(typeof(DbConnectionProvider))]
-    partial class DbConnectionProviderModelSnapshot : ModelSnapshot
+    [Migration("20200607042235_AddStatusFieldAddressTable")]
+    partial class AddStatusFieldAddressTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace APICore.Migrations
 
                     b.HasIndex("Cpf");
 
-                    b.ToTable("ADDRESS");
+                    b.ToTable("M_ADDRESS");
                 });
 
             modelBuilder.Entity("APICore.Models.Appointment", b =>
@@ -144,7 +146,7 @@ namespace APICore.Migrations
 
                     b.HasIndex("TimeSheetId");
 
-                    b.ToTable("DAYS_OF_THE_WEEK");
+                    b.ToTable("M_DAYS_OF_THE_WEEK");
                 });
 
             modelBuilder.Entity("APICore.Models.Doctor", b =>
@@ -180,7 +182,7 @@ namespace APICore.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("DOCTOR");
+                    b.ToTable("M_DOCTOR");
                 });
 
             modelBuilder.Entity("APICore.Models.Patient", b =>
@@ -207,7 +209,7 @@ namespace APICore.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("PATIENT");
+                    b.ToTable("P_PATIENT");
                 });
 
             modelBuilder.Entity("APICore.Models.Security", b =>
@@ -221,7 +223,7 @@ namespace APICore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SECURITY");
+                    b.ToTable("U_SECURITY");
                 });
 
             modelBuilder.Entity("APICore.Models.TimeSheet", b =>
@@ -266,7 +268,7 @@ namespace APICore.Migrations
 
                     b.HasIndex("Cpf");
 
-                    b.ToTable("TIMESHEET");
+                    b.ToTable("M_TIMESHEET");
                 });
 
             modelBuilder.Entity("APICore.Models.User", b =>
@@ -288,7 +290,7 @@ namespace APICore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("_USER");
+                    b.ToTable("U_USER");
                 });
 
             modelBuilder.Entity("APICore.Models.Address", b =>

@@ -7,8 +7,8 @@ namespace APICore.Repositories
     {
         void Add(Address address);
         IEnumerable<Address> GetAll();
-        Address Find(int addressId, string cpf);
-        void Remove(int addressId, string cpf);
+        Address Find(int addressId, string cpf, bool listarEnderecosDesativados = false);
+        void Remove(int addressId);
         void Update(Address address);
         IEnumerable<Address> GetAddress(string cpf);
         bool AddressExists(Address address);

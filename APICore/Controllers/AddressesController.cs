@@ -4,6 +4,7 @@ using APICore.Models;
 using System;
 using Microsoft.AspNetCore.Cors;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace APICore.Controllers
 {
@@ -24,76 +25,6 @@ namespace APICore.Controllers
             _addressRepository = addressRepository;
             _timeSheetRepository = timeSheetRepository;
             _daysOfTheWeekRepository = daysOfTheWeekRepository;
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Remove(int id, [FromBody] Address address)
-        {
-            if ((address == null) || (address.AddressId != id))
-            {
-                return BadRequest();
-            }
-
-            string message = "";
-
-            if (!address.AddressIsValid(ref message))
-            {
-                RetornoWS retornoWS = new RetornoWS
-                {
-                    Mensagem = $"Não foi possível cadastrar o endereço. Necessário informar os campos: {message}.",
-                    Sucesso = false
-                };
-
-                return BadRequest(retornoWS);
-            }
-
-            Doctor _doctor = _doctorRepository.Find(address.Cpf);
-
-            if (_doctor == null)
-            {
-                RetornoWS retornoWS = new RetornoWS
-                {
-                    Mensagem = "CPF não cadastrado, não será possível prosseguir com a atualização do endereço.",
-                    Sucesso = false
-                };
-
-                return NotFound(retornoWS);
-            }
-
-            try
-            {
-                if (_addressRepository.AddressExists(address))
-                {
-                    _addressRepository.Remove(address.AddressId, address.Cpf);
-
-                    RetornoWS retorno = new RetornoWS
-                    {
-                        Mensagem = $"Endereço excluído com sucesso.",
-                        Sucesso = true
-                    };
-
-                    return Ok(retorno);
-                }
-                else
-                {
-                    RetornoWS retornoWS = new RetornoWS
-                    {
-                        Mensagem = "Endereço não encontrado, não será possível remover.",
-                        Sucesso = false
-                    };
-                    return NotFound(retornoWS);
-                }
-            }
-            catch (Exception e)
-            {
-                RetornoWS retorno = new RetornoWS
-                {
-                    Mensagem = $"Não foi possível remover o endereço.Motivo: {e.Message} : {e.InnerException}",
-                    Sucesso = false
-                };
-
-                return StatusCode(500, retorno);
-            }
         }
 
         [HttpPut("{cpf}")]
@@ -147,6 +78,7 @@ namespace APICore.Controllers
                     _address.Information = address.Information;
                     _address.Telephone = address.Telephone;
                     _address.HealthCare = address.HealthCare;
+                    _address.Status = address.Status;
                                            
                     TimeSheet _timeSheet = _timeSheetRepository.Find(address.TimeSheet.TimeSheetId, address.Cpf, address.AddressId);
                     _timeSheet.StartDate = address.TimeSheet.StartDate;
@@ -245,7 +177,8 @@ namespace APICore.Controllers
 
                         return BadRequest(retornoWS);
                     }
-                    else { 
+                    else {
+                        address.Status = AddressStatus.Active;
                         _addressRepository.Add(address);
 
                         RetornoWS retorno = new RetornoWS
@@ -271,15 +204,22 @@ namespace APICore.Controllers
         }
 
         [HttpGet("GetAddresses")]
-        public IEnumerable<Address> GetAddresses(string cpf)
+        public IEnumerable<Address> GetAddresses(string cpf, bool listarEnderecosDesativados = false)
         {
-            return _addressRepository.GetAddress(cpf);                                   
+            if (!listarEnderecosDesativados) { 
+                return _addressRepository.GetAddress(cpf);
+            }
+            else
+            {
+                return _addressRepository.GetAddress(cpf).ToList()
+                    .Where(a => a.Status == AddressStatus.Active);
+            }
         }
 
         [HttpGet("GetAddress")]
-        public Address GetAddress(int addressId, string cpf)
-        {
-            return _addressRepository.Find(addressId, cpf);
+        public Address GetAddress(int addressId, string cpf, bool listarEnderecosDesativados = false)
+        {            
+            return _addressRepository.Find(addressId, cpf, listarEnderecosDesativados);
         }
     }
 }

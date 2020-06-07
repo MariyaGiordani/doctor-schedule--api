@@ -4,14 +4,16 @@ using APICore.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace APICore.Migrations
 {
     [DbContext(typeof(DbConnectionProvider))]
-    partial class DbConnectionProviderModelSnapshot : ModelSnapshot
+    [Migration("20200607044525_AlterTableNames")]
+    partial class AlterTableNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,7 +290,7 @@ namespace APICore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("_USER");
+                    b.ToTable("USER");
                 });
 
             modelBuilder.Entity("APICore.Models.Address", b =>

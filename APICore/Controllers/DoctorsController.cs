@@ -139,6 +139,44 @@ namespace APICore.Controllers
 
                 return StatusCode(500, retorno);
             }
-        }               
+        }
+
+        [HttpGet("GetDoctor")]
+        public IActionResult GetDoctor(string cpf)
+        {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+            if (cpf == "")
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var _doctor = _doctorRepository.Find(cpf);
+
+                if (_doctor == null)
+                {
+                    RetornoWS retorno = new RetornoWS
+                    {
+                        Mensagem = "Médico não encontrado",
+                        Sucesso = true
+                    };
+                    return NotFound(retorno);
+                }
+                else
+                {
+                    return Ok(_doctor);
+                }
+            }
+            catch (Exception e)
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = $"Erro ao buscar Médico.Motivo: {e.InnerException}",
+                    Sucesso = false
+                };
+
+                return StatusCode(500, retorno);
+            }
+        }
     }
 }

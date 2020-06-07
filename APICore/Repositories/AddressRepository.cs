@@ -17,20 +17,28 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public Address Find(int addressId, string cpf) {
-            return _context.Address
-                .Where(d => d.Cpf == cpf)
-                .Where(a => a.AddressId == addressId)
-                .SingleOrDefault();
+        public Address Find(int addressId, string cpf, bool listarEnderecosDesativados = false) {
+            if (listarEnderecosDesativados) {
+                return _context.Address
+                    .Where(d => d.Cpf == cpf)
+                    .Where(a => a.AddressId == addressId)
+                    .Where(a => a.Status == AddressStatus.Active)
+                    .SingleOrDefault();
+            }
+            else { 
+                return _context.Address
+                    .Where(d => d.Cpf == cpf)
+                    .Where(a => a.AddressId == addressId)               
+                    .SingleOrDefault();
+            }
         }
 
         public IEnumerable<Address> GetAll() {
             return _context.Address.ToList();
         }
 
-        public void Remove(int addressId, string cpf) {
+        public void Remove(int addressId) {
             var entity = _context.Address
-                .Where(d => d.Cpf == cpf)
                 .Where(d => d.AddressId == addressId)
                 .Single();
             _context.Address.Remove(entity);
@@ -42,8 +50,9 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Address> GetAddress(string cpf) {            
-            return _context.Address.Where(d => d.Cpf == cpf).ToList();
+        public IEnumerable<Address> GetAddress(string cpf) {
+            return _context.Address
+                .Where(d => d.Cpf == cpf).ToList();
         }
 
         public bool AddressExists(Address address)

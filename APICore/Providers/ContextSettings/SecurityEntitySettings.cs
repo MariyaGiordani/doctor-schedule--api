@@ -7,7 +7,7 @@ namespace APICore.Providers.ContextSettings
     public class SecurityEntitySettings : IEntityTypeConfiguration<Security>
     {
         public void Configure(EntityTypeBuilder<Security> modelbuilder) {
-            modelbuilder.ToTable("U_SECURITY");
+            modelbuilder.ToTable("SECURITY");
 
             modelbuilder.HasKey(s => s.Id);
 

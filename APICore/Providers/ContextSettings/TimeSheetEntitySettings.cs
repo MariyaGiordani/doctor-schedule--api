@@ -9,7 +9,7 @@ namespace APICore.Providers.ContextSettings
     {
         public void Configure(EntityTypeBuilder<TimeSheet> modelbuilder)
         {
-            modelbuilder.ToTable("M_TIMESHEET");
+            modelbuilder.ToTable("TIMESHEET");
 
             modelbuilder.HasKey(m => m.TimeSheetId);
 

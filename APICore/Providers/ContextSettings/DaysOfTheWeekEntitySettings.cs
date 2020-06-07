@@ -8,7 +8,7 @@ namespace APICore.Providers.ContextSettings
     {
         public void Configure(EntityTypeBuilder<DaysOfTheWeek> modelbuilder)
         {
-            modelbuilder.ToTable("M_DAYS_OF_THE_WEEK");
+            modelbuilder.ToTable("DAYS_OF_THE_WEEK");
 
             modelbuilder.HasKey(m => m.Id);
 

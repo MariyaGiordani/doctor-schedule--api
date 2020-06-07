@@ -41,7 +41,7 @@ namespace APICore.Repositories
         public IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName, string neighborhood) {
             var result = _context.Doctor.AsQueryable();
 
-            if (speciality != null) {
+            if ((speciality != null) && (speciality != "NENHUMA")){
                 result = result.Where(d => d.Speciality == speciality);
             }
 
@@ -60,6 +60,7 @@ namespace APICore.Repositories
             
             result = result.Include(d => d.Addresses);
             result = result.Where(d => d.Addresses != null);
+            result = result.Where(d => d.Addresses.Any(a => a.Status == AddressStatus.Active));
             result = result.Include(d => d.TimeSheets).ThenInclude(d => d.DaysOfTheWeeks);
 
             return result.ToList();
