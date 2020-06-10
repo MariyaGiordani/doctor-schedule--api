@@ -96,6 +96,7 @@ namespace APICore.Repositories
                          patient
                      })
                 .Where(d => d.appointment.appointment.appointment.DoctorCpf == cpf)
+                .Where(d => d.appointment.appointment.appointment.Status == AppointmentStatus.Scheduled)
                 .Select(x => new DoctorAppointmentViewModel
                 {
                     DoctorCpf = x.appointment.appointment.appointment.DoctorCpf,
@@ -104,7 +105,8 @@ namespace APICore.Repositories
                     AppointmentEndTime = x.appointment.appointment.appointment.AppointmentEndTime,
                     PatientFirstName = x.patient.FirstName,
                     PatientLastName = x.patient.LastName,
-                    Address = x.appointment.appointment.appointment.Address
+                    Address = x.appointment.appointment.appointment.Address,
+                    AppointmentId = x.appointment.appointment.appointment.AppointmentId
                 })
                 .ToList();
         }
@@ -150,7 +152,8 @@ namespace APICore.Repositories
                     AppointmentEndTime = x.appointment.appointment.appointment.AppointmentEndTime,
                     DoctorFirstName = x.doctor.FirstName,
                     DoctorLastName = x.doctor.LastName,
-                    Address = x.appointment.appointment.appointment.Address
+                    Address = x.appointment.appointment.appointment.Address,
+                    AppointmentId = x.appointment.appointment.appointment.AppointmentId
                 })
                 .ToList();
         }

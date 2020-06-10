@@ -12,5 +12,6 @@ namespace APICore.Models.ViewModels
         public string DoctorFirstName { get; set; }
         public string DoctorLastName { get; set; }
         public Address Address { get; set; }
+        public int AppointmentId { get; set; }
     }
 }

@@ -62,7 +62,7 @@ namespace APICore.Controllers
                     Appointment _appointment = _appointmentRepository.Find(appointment.AppointmentId, appointment.AddressId,
                                                 appointment.DoctorCpf, appointment.PatientCpf);                    
 
-                    if (appointment.Status == AppointmentStatus.Canceled)
+                    if ((appointment.Status == AppointmentStatus.Canceled) && (_appointment.Status == AppointmentStatus.Scheduled))
                     {
                         TimeSheet timeSheet = _timeSheetRepository.Find(appointment.DoctorCpf, appointment.AddressId);
                         
@@ -99,7 +99,7 @@ namespace APICore.Controllers
                         }
                     }
 
-                    if (appointment.Status == AppointmentStatus.Rescheduled)
+                    if ((appointment.Status == AppointmentStatus.Rescheduled) && (_appointment.Status == AppointmentStatus.Scheduled))
                     {
                         TimeSheet timeSheet = _timeSheetRepository.Find(appointment.DoctorCpf, appointment.AddressId);
 
