@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace APICore.Models
 {
@@ -6,8 +7,13 @@ namespace APICore.Models
     {
         string firstName;
         string lastName;
+        string cpf;
 
-        public string Cpf { get; set; }
+        public string Cpf
+        {
+            get => cpf;
+            set => cpf = value.Replace(".", "").Replace("-", "");
+        }
         public string FirstName {
             get => firstName;
             set => firstName = value.ToUpper(); 
@@ -18,7 +24,10 @@ namespace APICore.Models
         }
 
         public int Id { get; set; }
+        [JsonIgnore]
         public User User { get; set; }
+        [JsonIgnore]
+        public ICollection<Appointment> Appointments { get; set; }
 
         public bool PatientIsValid(ref string message, bool isValid = true) {
             if (Cpf == "") {

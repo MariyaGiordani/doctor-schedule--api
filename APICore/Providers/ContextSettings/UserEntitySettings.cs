@@ -7,7 +7,7 @@ namespace APICore.Providers.ContextSettings
     public class UserEntitySettings : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> modelbuilder) {
-            modelbuilder.ToTable("U_USER");
+            modelbuilder.ToTable("_USER");
 
             modelbuilder.HasKey(u => u.Id);
 

@@ -10,5 +10,6 @@ namespace APICore.Repositories
         Patient Find(string cpf);
         void Remove(string cpf);
         void Update(Patient patient);
+        bool PatientExists(string cpf);
     }
 }

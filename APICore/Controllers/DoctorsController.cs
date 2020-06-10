@@ -3,6 +3,9 @@ using APICore.Repositories;
 using APICore.Models;
 using System;
 using Microsoft.AspNetCore.Cors;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace APICore.Controllers
 {
@@ -12,23 +15,45 @@ namespace APICore.Controllers
     public class DoctorsController : ControllerBase
     {
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IAddressRepository _addressRepository;
 
-        public DoctorsController(IDoctorRepository doctorRepository) {
+        public DoctorsController(IDoctorRepository doctorRepository, IAddressRepository addressRepository) {
             _doctorRepository = doctorRepository;
+            _addressRepository = addressRepository;
         }
 
         [HttpGet("search")]
-        public IActionResult SearchDoctors(string speciality, string firstName, string lastName) {
-            if ((speciality == null) && (firstName == null) && (lastName == null)){
+        public IActionResult SearchDoctors(string speciality, string firstName, string lastName, string neighborhood) {
+            if ((speciality == null) && (firstName == null) && (lastName == null) && (neighborhood == null))
+            {
                 RetornoWS retorno = new RetornoWS {
                     Mensagem = "Necessário informar pelo menos um filtro.",
                     Sucesso = false
                 };
 
                 return BadRequest(retorno);
-            }            
+            }
 
-            return Ok(_doctorRepository.GetDoctor(speciality, firstName, lastName));
+            IEnumerable<Doctor> doctors = _doctorRepository.GetDoctor(speciality, firstName, lastName, neighborhood);
+
+            if (doctors.Any() == false)
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = "Nenhum médico encontrado.",
+                    Sucesso = true
+                };
+
+                return NotFound(retorno);
+            }
+            else
+            {
+                var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+
+                string json = JsonConvert.SerializeObject(doctors, Formatting.Indented, serializerSettings);
+
+                return Content(json, "application/json");                
+            }            
         }
 
         [HttpPut("{cpf}")]
@@ -109,6 +134,44 @@ namespace APICore.Controllers
             catch (Exception e) {
                 RetornoWS retorno = new RetornoWS {
                     Mensagem = $"Erro ao buscar médico.Motivo: {e.InnerException}",
+                    Sucesso = false
+                };
+
+                return StatusCode(500, retorno);
+            }
+        }
+
+        [HttpGet("GetDoctor")]
+        public IActionResult GetDoctor(string cpf)
+        {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+            if (cpf == "")
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var _doctor = _doctorRepository.Find(cpf);
+
+                if (_doctor == null)
+                {
+                    RetornoWS retorno = new RetornoWS
+                    {
+                        Mensagem = "Médico não encontrado",
+                        Sucesso = true
+                    };
+                    return NotFound(retorno);
+                }
+                else
+                {
+                    return Ok(_doctor);
+                }
+            }
+            catch (Exception e)
+            {
+                RetornoWS retorno = new RetornoWS
+                {
+                    Mensagem = $"Erro ao buscar Médico.Motivo: {e.InnerException}",
                     Sucesso = false
                 };
 

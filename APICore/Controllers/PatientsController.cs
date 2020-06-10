@@ -17,6 +17,8 @@ namespace APICore.Controllers
             _patientRepository = patientRepository;
         }
 
+
+
         [HttpPut("{cpf}")]
         public IActionResult Update(string cpf, [FromBody] Patient patient) {
             if (patient == null || patient.Cpf != cpf) {
@@ -92,6 +94,44 @@ namespace APICore.Controllers
             }
             catch (Exception e) {
                 RetornoWS retorno = new RetornoWS {
+                    Mensagem = $"Erro ao buscar paciente.Motivo: {e.InnerException}",
+                    Sucesso = false
+                };
+
+                return StatusCode(500, retorno);
+            }
+        }
+
+        [HttpGet("GetPatient")]
+        public IActionResult GetPatient(string cpf)
+        {
+            if (cpf == "")
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var _patient = _patientRepository.Find(cpf);
+
+                if (_patient == null)
+                {
+                    RetornoWS retorno = new RetornoWS
+                    {
+                        Mensagem = "Paciente não encontrado",
+                        Sucesso = true
+                    };
+                    return NotFound(retorno);
+                }
+                else
+                {                
+                    return Ok(_patient);
+                }
+            }
+            catch (Exception e)
+            {
+                RetornoWS retorno = new RetornoWS
+                {
                     Mensagem = $"Erro ao buscar paciente.Motivo: {e.InnerException}",
                     Sucesso = false
                 };

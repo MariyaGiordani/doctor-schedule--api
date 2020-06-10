@@ -10,6 +10,7 @@ namespace APICore.Repositories
         Doctor Find(string cpf);
         void Remove(string cpf);
         void Update(Doctor doctor);
-        IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName);
-        }
+        IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName, string neighborhood);
+        bool DoctorExists(string cpf);
+    }
 }

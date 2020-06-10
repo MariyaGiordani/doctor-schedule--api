@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Esse arquivo é usado pelo processo de publicação/pacote do seu projeto Web. É possível personalizar o comportamento deste processo
+ao editar este arquivo MSBuild. Para saber mais sobre isso, visite https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA7T7DJifdk0aN+hZdXWz9ygAAAAACAAAAAAADZgAAwAAAABAAAADEX8u2qQ9rFueBFJGRG23PAAAAAASAAACgAAAAEAAAAGusm0HG2VDGXl8hs5YaBvOAAAAAt9AE9ktbjPlXsCLGqe6GJ3kXRS+uyJLHGqoXLWgyRIv7SJcP27W0NfFgePwtO2UNOMVqpIPmWJkHXoq9De7jf1paI0JOiU8lp4w86iROlVMKQd5oWUKzM53yhnulITVmAZAEus+GGudIjQUwYpS+YjHgnD5I6eR/5LUhWzwjUOwUAAAAP5R6I8REuV4BIYgZSWE+DF5YJT0=</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=tcp:agendamedico.database.windows.net,1433%3bInitial Catalog=AgendaMedico_db%3bUser Id=administrafoda%40agendamedico%3bPassword=Unicorniopepino%402019</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="APICore.Database.DbConnectionProvider">
+      <Value>Data Source=tcp:agendamedico.database.windows.net,1433%3bInitial Catalog=AgendaMedico_db%3bUser Id=administrafoda%40agendamedico%3bPassword=Unicorniopepino%402019</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

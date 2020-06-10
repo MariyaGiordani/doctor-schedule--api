@@ -1,11 +1,18 @@
-﻿namespace APICore.Models
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+namespace APICore.Models
 {
     public class Doctor {
         string firstName;
         string lastName;
         string speciality;
+        string cpf;
 
-        public string Cpf { get; set; }
+        public string Cpf { 
+            get => cpf;
+            set => cpf = value.Replace(".", "").Replace("-", ""); 
+        }
         public string FirstName {
             get => firstName;
             set => firstName = value.ToUpper(); 
@@ -21,7 +28,15 @@
             set => speciality = value.ToUpper(); 
         }
         public int Id { get; set; }   
+        [JsonIgnore]
         public User User { get; set; }
+        [JsonIgnore]
+        public ICollection<Address> Addresses { get; set; }
+        [JsonIgnore]
+        public ICollection<TimeSheet> TimeSheets { get; set; }
+        [JsonIgnore]
+        public ICollection<Appointment> Appointments { get; set; }
+        
 
         public bool DoctorIsValid(ref string message, bool isValid = true) {            
             if (Cpf == "") {

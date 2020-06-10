@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "restored": true,
+      "restoreTime": "2020-05-23T02:22:00.4337391Z"
+    }
+  },
+  "parameters": {
+    "resourceGroup": {
+      "Type": "resourceGroup",
+      "Value": "AgendaMedico"
+    },
+    "subscriptionId": {
+      "Type": "subscription",
+      "Value": "1a2e2e97-1633-420b-bfdf-307288418065"
+    }
+  }
+}

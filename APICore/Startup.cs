@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace APICore
 {
@@ -32,11 +33,9 @@ namespace APICore
                     builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod());
             });
 
-            //services.Configure<MvcOptions>(options => {
-            //    options.Filters.Add(new CorsAuthorizationFilterFactory("AllowMyOrigin"));
-            //});
-
-            //services.TryAddTransient<CorsAuthorizationFilter, CorsAuthorizationFilter>();
+            services.AddMvc().AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             services.AddDbContext<DbConnectionProvider>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -49,6 +48,10 @@ namespace APICore
             services.AddTransient<IDoctorRepository, DoctorRepository>();
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<ISecurityRepository, SecurityRepository>();
+            services.AddTransient<IAddressRepository, AddressRepository>();
+            services.AddTransient<ITimeSheetRepository, TimeSheetRepository>();
+            services.AddTransient<IDaysOfTheWeekRepository, DaysOfTheWeekRepository>();
+            services.AddTransient<IAppointmentRepository, AppointmentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +78,6 @@ namespace APICore
                 });
 
             app.UseMvc();
-            //app.UseCors("AllowMyOrigin");
             app.UseHttpsRedirection();
         }
     }

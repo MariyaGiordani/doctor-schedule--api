@@ -36,5 +36,9 @@ namespace APICore.Repositories
             _context.Patient.Update(patient);
             _context.SaveChanges();
         }
+        public bool PatientExists(string cpf)
+        {
+            return _context.Patient.FirstOrDefault(p => p.Cpf == cpf) != null;
+        }
     }
 }

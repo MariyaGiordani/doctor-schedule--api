@@ -1,5 +1,7 @@
 ﻿using APICore.Database;
 using APICore.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,10 +38,10 @@ namespace APICore.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName) {
+        public IEnumerable<Doctor> GetDoctor(string speciality, string firstName, string lastName, string neighborhood) {
             var result = _context.Doctor.AsQueryable();
 
-            if (speciality != null) {
+            if ((speciality != null) && (speciality != "NENHUMA")){
                 result = result.Where(d => d.Speciality == speciality);
             }
 
@@ -50,7 +52,23 @@ namespace APICore.Repositories
             if (lastName != null) {
                 result = result.Where(d => d.LastName.Contains(lastName));
             }
+
+            if (neighborhood != null)
+            {
+                result = result.Where(d => d.Addresses.Any(n => n.Neighborhood == neighborhood));
+            }
+            
+            result = result.Include(d => d.Addresses);
+            result = result.Where(d => d.Addresses != null);
+            result = result.Where(d => d.Addresses.Any(a => a.Status == AddressStatus.Active));
+            result = result.Include(d => d.TimeSheets).ThenInclude(d => d.DaysOfTheWeeks);
+
             return result.ToList();
+        }
+
+        public bool DoctorExists(string cpf)
+        {
+            return _context.Doctor.FirstOrDefault(d => d.Cpf == cpf) != null;
         }
     }
 }

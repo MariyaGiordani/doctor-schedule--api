@@ -7,7 +7,7 @@ namespace APICore.Providers.ContextSettings
     public class DoctorEntitySettings : IEntityTypeConfiguration<Doctor>
     {
         public void Configure(EntityTypeBuilder<Doctor> modelbuilder) {           
-            modelbuilder.ToTable("M_DOCTOR");
+            modelbuilder.ToTable("DOCTOR");
 
             modelbuilder.HasKey(m => m.Cpf);
 
@@ -40,6 +40,10 @@ namespace APICore.Providers.ContextSettings
             modelbuilder.Property(m => m.Id)
                  .HasColumnName("USER_ID")
                  .IsRequired();
+            
+            modelbuilder.HasMany(d => d.Addresses).WithOne(d => d.Doctor).IsRequired();
+            modelbuilder.HasMany(d => d.TimeSheets).WithOne(d => d.Doctor).OnDelete(DeleteBehavior.Restrict).IsRequired();           
+            modelbuilder.HasMany(d => d.Appointments).WithOne(d => d.Doctor).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }

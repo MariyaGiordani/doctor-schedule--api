@@ -4,6 +4,7 @@ using APICore.Repositories;
 using APICore.Models;
 using System;
 using Microsoft.AspNetCore.Cors;
+using Newtonsoft.Json;
 
 namespace APICore.Controllers
 {
@@ -167,7 +168,11 @@ namespace APICore.Controllers
                         Objeto = User
                     };
 
-                    return Ok(retorno);
+                    var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+
+                    string json = JsonConvert.SerializeObject(retorno, Formatting.Indented, serializerSettings);
+
+                    return Content(json, "application/json");
                 }
                 else {
                     RetornoWS retorno = new RetornoWS {
